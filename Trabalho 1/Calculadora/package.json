@@ -1,0 +1,16 @@
+{
+  "name": "socket-calculator",
+  "version": "1.0.0",
+  "description": "Simple socket calculator",
+  "main": "client.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "readline-sync": "^1.4.10"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
