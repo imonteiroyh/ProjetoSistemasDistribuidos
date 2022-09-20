@@ -41,7 +41,7 @@ def threaded_client(connection_socket):
                     connection_socket.send(error.encode('utf-8'))
 
             elif data.split()[0] == '/USUARIOS':
-                
+
             elif data.split()[0] == '/SAIR':
 
             else:
