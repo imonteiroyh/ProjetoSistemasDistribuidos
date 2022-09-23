@@ -1,6 +1,6 @@
-from audioop import add
 import socket
 from config import GROUP_PORT, GROUP_HOST
+from serializers import message_pb2 as proto
 
 HOST = 'localhost'
 PORT = 7897
@@ -17,16 +17,21 @@ server_socket.bind((HOST, PORT))
 server_socket.listen()
 print(f'Servidor ouvindo no endereço {HOST}:{PORT}')
 
+message = proto.Message()
+message.type = 'DISCOVER'
+message.discover.CopyFrom(proto.Discover())
+message.discover.ip = HOST
+message.discover.port = PORT
+
 print('Descobrindo dispositivos...')
-group_socket.sendto(f'{HOST}:{PORT}'.encode('utf-8'), (GROUP_HOST, GROUP_PORT))
+group_socket.sendto(message.SerializeToString(), (GROUP_HOST, GROUP_PORT))
 
 connection_socket, address = server_socket.accept()
 print(f'Conexão aberta: {address}')
 
-data = connection_socket.recv(1024).decode('utf-8')
+data = connection_socket.recv(1024)
 
-sensors = []
+sensor_response = proto.Message()
+sensor_response.ParseFromString(data)
 
-sensors.append(data.split(':'))
-
-print(f'Sensor adicionado: {data}')
+print(f'Sensor adicionado: {sensor_response.discover.device_type}')

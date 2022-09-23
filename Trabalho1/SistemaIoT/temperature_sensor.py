@@ -2,6 +2,7 @@ import socket
 from time import sleep
 import struct
 from config import GROUP_HOST, GROUP_PORT
+from serializers import message_pb2 as proto
 
 HOST = 'localhost'
 PORT = 7899
@@ -18,12 +19,25 @@ sensor_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sensor_socket.bind((HOST, PORT))
 
 print('Esperando mensagem de descoberta...')
-message = group_socket.recv(1024).decode('utf-8')
-gateway_address, gateway_port = message.split(':')
-print(f'Gateway identificado: {gateway_address}:{gateway_port}')
+gateway_discover = proto.Message()
+gateway_discover.ParseFromString(group_socket.recv(1024))
+
+if gateway_discover.type == 'DISCOVER':
+    discover_message = gateway_discover.discover
+
+print(f'Gateway identificado: {discover_message.ip}:{discover_message.port}')
 
 sleep(0.5)
 
 print('Conectando ao gateway...')
-sensor_socket.connect((gateway_address, int(gateway_port)))
-sensor_socket.send(f'{HOST}:{PORT}'.encode('utf-8'))
+response_discover = proto.Discover()
+response_discover.device_type = 'TEMPERATURE_SENSOR'
+response_discover.ip = HOST
+response_discover.port = PORT
+
+response = proto.Message()
+response.type = 'DISCOVER'
+response.discover.CopyFrom(response_discover)
+
+sensor_socket.connect((discover_message.ip, discover_message.port))
+sensor_socket.send(response.SerializeToString())
