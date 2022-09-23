@@ -25,12 +25,15 @@ def threaded_client(connection_socket):
         try:
             data = connection_socket.recv(2048).decode()
 
-            if data.split()[0] == '/ENTRAR':
+            if data == '':
+                continue
+
+            elif data.split()[0] == '/ENTRAR':
                 if nicknames[connection_socket] == 'generic_username':
                     try:
                         nicknames[connection_socket] = data.split()[1]
                         for connection in connections:
-                            in_message = nicknames[connection_socket] + ' entrou na sala.'
+                            in_message = 'Servidor: ' + nicknames[connection_socket] + ' entrou na sala.'
                             if connection != connection_socket:
                                 connection.send(in_message.encode('utf-8'))
                     except:
@@ -41,12 +44,28 @@ def threaded_client(connection_socket):
                     connection_socket.send(error.encode('utf-8'))
 
             elif data.split()[0] == '/USUARIOS':
+                if nicknames[connection_socket] != 'generic_username':
+                    for _, nickname in nicknames.items():
+                        if nickname != 'generic_username':
+                            connection_socket.send(nickname.encode('utf-8'))
+                else:
+                    error = 'Comando inválido. Usuário precisa entrar na sala antes de usar esse comando.'
+                    connection_socket.send(error.encode('utf-8'))
 
             elif data.split()[0] == '/SAIR':
+                end_message = 'encerrar'
+                connection_socket.send(end_message.encode('utf-8'))
+                break
 
             else:
-
-
+                if nicknames[connection_socket] != 'generic_username':
+                    for connection in connections:
+                        if connection != connection_socket and nicknames[connection] != 'generic_username':
+                            data = f'{nicknames[connection_socket]}: ' + data
+                            connection.send(data.encode('utf-8'))
+                else:
+                    error = 'Usuário precisa entrar na sala para enviar mensagens.'
+                    connection_socket.send(error.encode('utf-8'))
 
         except:
             break
@@ -54,6 +73,7 @@ def threaded_client(connection_socket):
     print('Conexão encerrada.')
 
     try:
+        del nicknames[connection_socket]
         connections.remove(connection_socket)
     except:
         pass
@@ -68,4 +88,4 @@ while True:
     connections.append(connection_socket)
     nicknames[connection_socket] = 'generic_username'
 
-    start_new_thread(threaded_client, (connection_socket))
+    start_new_thread(threaded_client, (connection_socket, ))
