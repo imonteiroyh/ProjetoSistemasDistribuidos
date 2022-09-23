@@ -1,29 +1,32 @@
+from audioop import add
 import socket
-from config import MULTICAST_PORT, MULTICAST_HOST
+from config import GROUP_PORT, GROUP_HOST
 
 HOST = 'localhost'
 PORT = 7897
 
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+print('Iniciando servidor...')
+group_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+group_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+group_socket.bind((GROUP_HOST, GROUP_PORT))
+print(f'Comunicação em grupo no endereço {GROUP_HOST}:{GROUP_PORT}')
 
-s.bind((MULTICAST_HOST, MULTICAST_PORT))
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.bind((HOST, PORT))
 
-print('Mensagem enviada')
-s.sendto(f'{HOST}:{PORT}'.encode('utf-8'), (MULTICAST_HOST, MULTICAST_PORT))
+server_socket.listen()
+print(f'Servidor ouvindo no endereço {HOST}:{PORT}')
 
-tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-tcp.bind((HOST, PORT))
+print('Descobrindo dispositivos...')
+group_socket.sendto(f'{HOST}:{PORT}'.encode('utf-8'), (GROUP_HOST, GROUP_PORT))
 
-tcp.listen()
-print('Esperando dados do sensor...')
-conn, add = tcp.accept()
+connection_socket, address = server_socket.accept()
+print(f'Conexão aberta: {address}')
 
-
-data = conn.recv(1024).decode('utf-8')
+data = connection_socket.recv(1024).decode('utf-8')
 
 sensors = []
 
 sensors.append(data.split(':'))
 
-print(f'sensor adicionado: {data}')
+print(f'Sensor adicionado: {data}')
