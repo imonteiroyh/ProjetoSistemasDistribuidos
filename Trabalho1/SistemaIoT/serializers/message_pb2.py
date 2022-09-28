@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rmessage.proto\"9\n\x08\x44iscover\x12\x13\n\x0b\x64\x65vice_type\x18\x01 \x01(\t\x12\n\n\x02ip\x18\x02 \x01(\t\x12\x0c\n\x04port\x18\x03 \x01(\x05\"\"\n\x04\x44\x61ta\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t\"X\n\x07Message\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\x1d\n\x08\x64iscover\x18\x02 \x01(\x0b\x32\t.DiscoverH\x00\x12\x15\n\x04\x64\x61ta\x18\x03 \x01(\x0b\x32\x05.DataH\x00\x42\t\n\x07\x63ontent')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rmessage.proto\"9\n\x08\x44iscover\x12\x13\n\x0b\x64\x65vice_type\x18\x01 \x01(\t\x12\n\n\x02ip\x18\x02 \x01(\t\x12\x0c\n\x04port\x18\x03 \x01(\x05\"\x14\n\x04\x44\x61ta\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\t\"-\n\x07\x43ommand\x12\x0f\n\x07\x63ommand\x18\x01 \x01(\t\x12\x11\n\targuments\x18\x02 \x03(\t\"2\n\x0f\x43ommandResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"\xa2\x01\n\x07Message\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\x1d\n\x08\x64iscover\x18\x02 \x01(\x0b\x32\t.DiscoverH\x00\x12\x15\n\x04\x64\x61ta\x18\x03 \x01(\x0b\x32\x05.DataH\x00\x12\x1b\n\x07\x63ommand\x18\x04 \x01(\x0b\x32\x08.CommandH\x00\x12+\n\x0f\x63ommandResponse\x18\x05 \x01(\x0b\x32\x10.CommandResponseH\x00\x42\t\n\x07\x63ontent')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'message_pb2', globals())
@@ -23,7 +23,11 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _DISCOVER._serialized_start=17
   _DISCOVER._serialized_end=74
   _DATA._serialized_start=76
-  _DATA._serialized_end=110
-  _MESSAGE._serialized_start=112
-  _MESSAGE._serialized_end=200
+  _DATA._serialized_end=96
+  _COMMAND._serialized_start=98
+  _COMMAND._serialized_end=143
+  _COMMANDRESPONSE._serialized_start=145
+  _COMMANDRESPONSE._serialized_end=195
+  _MESSAGE._serialized_start=198
+  _MESSAGE._serialized_end=360
 # @@protoc_insertion_point(module_scope)

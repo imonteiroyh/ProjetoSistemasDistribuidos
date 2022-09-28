@@ -2,13 +2,23 @@ syntax = "proto2";
 
 message Discover {
     optional string device_type = 1;
-    optional string ip = 2;
-    optional int32 port = 3;
+    optional string communication_type = 2;
+    optional string ip = 3;
+    optional int32 port = 4;
 }
 
 message Data {
-    optional string type = 1;
-    optional string data = 2;
+    optional string data = 1;
+}
+
+message Command {
+    optional string command = 1;
+    repeated string arguments = 2;
+}
+
+message CommandResponse {
+    optional bool status = 1;
+    optional string message = 2;
 }
 
 message Message {
@@ -16,5 +26,7 @@ message Message {
     oneof content {
         Discover discover = 2;
         Data data = 3;
+        Command command = 4;
+        CommandResponse commandResponse = 5;
     }
 }
