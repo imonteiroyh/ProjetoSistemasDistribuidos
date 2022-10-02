@@ -21,6 +21,16 @@ message CommandResponse {
     optional string message = 2;
 }
 
+message Device {
+    optional int32 id = 1;
+    optional string device_type = 2;
+    optional string communication_type = 3;
+}
+
+message DeviceList {
+    repeated Device devices = 1;
+}
+
 message Message {
     optional string type = 1;
     oneof content {
@@ -28,5 +38,7 @@ message Message {
         Data data = 3;
         Command command = 4;
         CommandResponse commandResponse = 5;
+        Device device = 6;
+        DeviceList device_list = 7;
     }
 }

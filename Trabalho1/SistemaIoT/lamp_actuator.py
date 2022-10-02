@@ -1,12 +1,11 @@
+from email import message_from_bytes
 import socket 
-from time import sleep
+from serializers import message_pb2 as proto
 import struct
 from config import GROUP_HOST, GROUP_PORT
-from serializers import message_pb2 as proto
-from random import randint
 
-HOST = 'localhost'
-PORT = 7909
+HOST = '127.0.0.1'
+PORT = 7904
 
 print('Iniciando sensor...')
 group_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -30,8 +29,8 @@ print(f'Gateway identificado: {discover_message.ip}:{discover_message.port}')
 
 print('Conectando ao gateway...')
 response_discover = proto.Discover()
-response_discover.device_type = 'TEMPERATURE_SENSOR'
-response_discover.communication_type = 'SENSOR'
+response_discover.device_type = 'LAMP_ACTUATOR'
+response_discover.communication_type = 'ACTUATOR'
 response_discover.ip = HOST
 response_discover.port = PORT
 
@@ -42,14 +41,19 @@ response.discover.CopyFrom(response_discover)
 sensor_socket.connect((discover_message.ip, discover_message.port))
 sensor_socket.send(response.SerializeToString())
 
+lamp_state = False
+
 while True:
-    sleep(1)
-
-    data = proto.Data()
-    data.data = str(randint(10, 30))
-
-    data_message = proto.Message()
-    data_message.type = 'DATA'
-    data_message.data.CopyFrom(data)
-
-    sensor_socket.send(data_message.SerializeToString())
+    message = proto.Message()
+    message.ParseFromString(sensor_socket.recv(1024))
+    print('mensagem recebida')
+    if message.type == 'COMMAND':
+        command = message.command.command
+        message = proto.Message(type = 'COMMAND_RESPONSE')
+        if command == 'CHANGE_STATE':
+            lamp_state = not lamp_state
+            message.commandResponse.CopyFrom(proto.CommandResponse(status=True, message='STATE CHANGED'))
+        if command == 'GET_STATE':
+            message.commandResponse.CopyFrom(proto.CommandResponse(status=True, message=str('TURNED ON' if lamp_state else 'TURNED OFF')))
+        sensor_socket.send(message.SerializeToString())
+        
