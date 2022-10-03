@@ -1,4 +1,3 @@
-from email import message_from_bytes
 import socket 
 from serializers import message_pb2 as proto
 import struct
@@ -30,7 +29,7 @@ print(f'Gateway identificado: {discover_message.ip}:{discover_message.port}')
 
 print('Conectando ao gateway...')
 response_discover = proto.Discover()
-response_discover.device_type = 'LAMP_ACTUATOR'
+response_discover.device_type = 'AIR_CONDITIONER'
 response_discover.communication_type = 'ACTUATOR'
 response_discover.ip = HOST
 response_discover.port = PORT
@@ -42,7 +41,7 @@ response.discover.CopyFrom(response_discover)
 sensor_socket.connect((discover_message.ip, discover_message.port))
 sensor_socket.send(response.SerializeToString())
 
-lamp_state = False
+temp = 20
 
 while True:
     message = proto.Message()
@@ -50,14 +49,15 @@ while True:
     print('mensagem recebida')
     if message.type == 'COMMAND':
         command = message.command.command
+        arguments = message.command.arguments
         message = proto.Message(type = 'COMMAND_RESPONSE')
-        if command == 'CHANGE_STATE':
-            lamp_state = not lamp_state
-            message.commandResponse.CopyFrom(proto.CommandResponse(status=True, message='STATE CHANGED'))
-        if command == 'GET_STATE':
-            message.commandResponse.CopyFrom(proto.CommandResponse(status=True, message=str('TURNED ON' if lamp_state else 'TURNED OFF')))
+        if command == 'CHANGE_TEMP':
+            temp = arguments[0]
+            message.commandResponse.CopyFrom(proto.CommandResponse(status=True, message='TEMPERATURE CHANGED'))
+        if command == 'GET_TEMP':
+            message.commandResponse.CopyFrom(proto.CommandResponse(status=True, message=str(temp)))
         if command == 'HELP':
-            help_message = '\nCOMMAND: GET_STATE\nARGUMENTS: NO_ARGUMENTS\nCOMMAND: CHANGE_STATE\nARGUMENTS: NO_ARGUMENTS'
+            help_message = '\nCOMMAND: GET_TEMP\nARGUMENTS: NO_ARGUMENTS\nCOMMAND: CHANGE_TEMP\nARGUMENTS: TEMPERATURE'
             message.commandResponse.CopyFrom(proto.CommandResponse(status=True, message=help_message))
         sensor_socket.send(message.SerializeToString())
         

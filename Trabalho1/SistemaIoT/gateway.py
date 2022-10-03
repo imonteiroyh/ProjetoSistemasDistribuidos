@@ -41,24 +41,28 @@ def handleSensor(socket, address, mutex, sensor_id):
 
 
 def handleApplication(socket, address, mutex, global_queue):
-    message = proto.Message(type='DEVICE_LIST')
-
-    devices = []
-    for sensor_id in sensors.keys():
-        sensor = sensors[sensor_id]
-        device = proto.Device(id=sensor_id, device_type=sensor[1], communication_type=sensor[2])
-        devices.append(device)
-
-    message.device_list.CopyFrom(proto.DeviceList(devices=devices))
-    print('enviando lista de dispositivos...')
-    socket.send(message.SerializeToString())
-    
     while True:
+        message = proto.Message(type='DEVICE_LIST')
+
+        devices = []
+        for sensor_id in sensors.keys():
+            sensor = sensors[sensor_id]
+            device = proto.Device(id=sensor_id, device_type=sensor[1], communication_type=sensor[2])
+            devices.append(device)
+
+        message.device_list.CopyFrom(proto.DeviceList(devices=devices))
+        print('Enviando lista de dispositivos...')
+        socket.send(message.SerializeToString())
+        
         user_device = proto.Message()
         user_device.ParseFromString(socket.recv(1024))
 
-        print(f'id do dispositivo: {user_device.device.id}')
-        print(f'tipo de dispositivo: {user_device.device.device_type}')
+        if user_device.device.id == 0:
+            print('Erro de conexão com a aplicação')
+            break
+
+        print(f'Id do dispositivo: {user_device.device.id}')
+        print(f'Tipo de dispositivo: {user_device.device.device_type}')
 
         if user_device.device.communication_type == 'SENSOR':
             while True:
@@ -66,7 +70,7 @@ def handleApplication(socket, address, mutex, global_queue):
                 user_data = proto.Message()
                 with mutex:
                     user_data.data.CopyFrom(proto.Data(data=sensors[user_device.device.id][0][0]))
-                    print('enviando...' + str(sensors[user_device.device.id][0][0]))
+                    #print('enviando...' + str(sensors[user_device.device.id][0][0]))
                     socket.send(user_data.SerializeToString())
                     server_should_continue = proto.Message()
                     server_should_continue.ParseFromString(socket.recv(1024))

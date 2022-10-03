@@ -4,9 +4,10 @@ import struct
 from config import GROUP_HOST, GROUP_PORT
 from serializers import message_pb2 as proto
 from random import randint
+import sys
 
 HOST = 'localhost'
-PORT = 7909
+PORT = 7908 if len(sys.argv) < 2 else int(sys.argv[1])
 
 print('Iniciando sensor...')
 group_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

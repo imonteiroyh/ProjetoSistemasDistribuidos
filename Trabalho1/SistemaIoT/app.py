@@ -3,7 +3,7 @@ import sys, select, os
 from serializers import message_pb2 as proto
 
 HOST = 'localhost'
-PORT = 7995
+PORT = 7994 if len(sys.argv) < 2 else int(sys.argv[1])
 GATEWAY_HOST = 'localhost'
 GATEWAY_PORT = 7884
 
@@ -18,18 +18,19 @@ message.discover.CopyFrom(proto.Discover(device_type='APP'))
 
 app_socket.send(message.SerializeToString())
 
-device_message = proto.Message()
-device_message.ParseFromString(app_socket.recv(1024))
-
-
 while True:
+
+    device_message = proto.Message()
+    device_message.ParseFromString(app_socket.recv(1024))
+
     for device in device_message.device_list.devices:
+        print()
         print(f'Dispositivo {device.id}')
         print(f'Tipo de dispositivo: {device.device_type}')
         print(f'Tipo de comunicação: {device.communication_type}')
         print()
 
-    user_device_id = int(input('Com qual dispositivo deseja se comunicar?'))
+    user_device_id = int(input('Com qual dispositivo deseja se comunicar? '))
 
     #print(user_device_id)
 
@@ -48,7 +49,6 @@ while True:
     if device_type_requested == 'SENSOR':
         while True:
             message = proto.Message()
-            print('esperando dados...')
             message.ParseFromString(app_socket.recv(1024))
             print(f'Dados: {message.data.data}')
             continue_message = proto.Message()
@@ -60,16 +60,14 @@ while True:
             continue_message.command.CopyFrom(proto.Command(command='CONTINUE'))
             app_socket.send(continue_message.SerializeToString())
 
-        print('saiu')
-
     else:
-        user_command = input('Digite o comando que deseja enviar para o atuador')
-        user_arguments = input('Digite os argumentos').split(' ')
+        user_command = input('Digite o comando que deseja enviar para o atuador: ')
+        user_arguments = input('Digite os argumentos: ').split(' ')
         message = proto.Message(type='COMMAND')
         message.command.CopyFrom(proto.Command(command=user_command, arguments=user_arguments))
         app_socket.send(message.SerializeToString())
         message = proto.Message()
         message.ParseFromString(app_socket.recv(1024))
+        print()
         print(f'Status: {message.commandResponse.status}')
         print(f'Mensagem: {message.commandResponse.message}')
-        print()
