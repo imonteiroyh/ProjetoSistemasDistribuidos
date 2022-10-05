@@ -1,17 +1,17 @@
 import socket
-from config import GROUP_PORT, GROUP_HOST
+from config import GROUP_PORT, GROUP_HOST, find_free_port
 from serializers import message_pb2 as proto
 import threading
 from time import sleep
 import queue
 
-HOST = '127.0.0.1'
-PORT = 7884
-
 sensors_count = 0
 
 sensors = {
 }
+
+HOST = '127.0.0.1'
+PORT = find_free_port()
 
 def findDevices(group_socket, time=5):
     while True:
@@ -53,7 +53,7 @@ def handleApplication(socket, address, mutex, global_queue):
         message.device_list.CopyFrom(proto.DeviceList(devices=devices))
         print('Enviando lista de dispositivos...')
         socket.send(message.SerializeToString())
-        
+
         user_device = proto.Message()
         user_device.ParseFromString(socket.recv(1024))
 
@@ -108,20 +108,20 @@ def handleConnection(socket, address, mutex, global_queue):
         sensor_id = sensors_count
         if sensor_response.discover.communication_type == 'SENSOR':
             sensors[sensor_id] = [
-                [], 
-                sensor_response.discover.device_type, 
+                [],
+                sensor_response.discover.device_type,
                 sensor_response.discover.communication_type
             ]
         else:
             sensors[sensor_id] = [
-                [], 
-                sensor_response.discover.device_type, 
+                [],
+                sensor_response.discover.device_type,
                 sensor_response.discover.communication_type,
                 socket
             ]
 
-    print(f'Dispositivo adicionado: {sensor_response.discover.device_type}') 
-    
+    print(f'Dispositivo adicionado: {sensor_response.discover.device_type}')
+
     if sensor_response.discover.communication_type == 'SENSOR':
         handleSensor(socket, address, mutex, sensor_id)
 

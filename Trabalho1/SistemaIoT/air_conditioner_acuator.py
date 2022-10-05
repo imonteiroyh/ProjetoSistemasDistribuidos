@@ -1,11 +1,11 @@
-import socket 
+import socket
 from serializers import message_pb2 as proto
 import struct
-from config import GROUP_HOST, GROUP_PORT
+from config import GROUP_HOST, GROUP_PORT, find_free_port
 import sys
 
 HOST = '127.0.0.1'
-PORT = 7904 if len(sys.argv) < 2 else int(sys.argv[1])
+PORT = find_free_port() if len(sys.argv) < 2 else int(sys.argv[1])
 
 print('Iniciando sensor...')
 group_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -60,4 +60,3 @@ while True:
             help_message = '\nCOMMAND: GET_TEMP\nARGUMENTS: NO_ARGUMENTS\nCOMMAND: CHANGE_TEMP\nARGUMENTS: TEMPERATURE'
             message.commandResponse.CopyFrom(proto.CommandResponse(status=True, message=help_message))
         sensor_socket.send(message.SerializeToString())
-        

@@ -1,9 +1,10 @@
 import socket
 import sys, select, os
+from config import find_free_port
 from serializers import message_pb2 as proto
 
 HOST = 'localhost'
-PORT = 7994 if len(sys.argv) < 2 else int(sys.argv[1])
+PORT = find_free_port() if len(sys.argv) < 2 else int(sys.argv[1])
 GATEWAY_HOST = 'localhost'
 GATEWAY_PORT = 7884
 
@@ -44,7 +45,7 @@ while True:
             #print(device_type_requested)
             app_socket.send(message.SerializeToString())
             break
-        
+
 
     if device_type_requested == 'SENSOR':
         while True:
