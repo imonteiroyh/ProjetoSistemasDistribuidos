@@ -47,7 +47,7 @@ lamp_state = False
 while True:
     message = proto.Message()
     message.ParseFromString(sensor_socket.recv(1024))
-    print('mensagem recebida')
+    print('Mensagem recebida')
     if message.type == 'COMMAND':
         command = message.command.command
         message = proto.Message(type = 'COMMAND_RESPONSE')

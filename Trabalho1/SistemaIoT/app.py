@@ -1,12 +1,11 @@
 import socket
 import sys, select, os
-from config import find_free_port
+from config import GATEWAY_PORT, find_free_port
 from serializers import message_pb2 as proto
 
 HOST = 'localhost'
 PORT = find_free_port() if len(sys.argv) < 2 else int(sys.argv[1])
 GATEWAY_HOST = 'localhost'
-GATEWAY_PORT = 7884
 
 print('Iniciando aplicação...')
 app_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

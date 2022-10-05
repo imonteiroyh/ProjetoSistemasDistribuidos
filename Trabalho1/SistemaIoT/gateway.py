@@ -1,17 +1,16 @@
 import socket
-from config import GROUP_PORT, GROUP_HOST, find_free_port
+from config import GROUP_PORT, GROUP_HOST, GATEWAY_PORT
 from serializers import message_pb2 as proto
 import threading
 from time import sleep
 import queue
 
-sensors_count = 0
-
-sensors = {
-}
-
 HOST = '127.0.0.1'
-PORT = find_free_port()
+PORT = GATEWAY_PORT
+
+all_devices_count = 0
+
+all_devices = {}
 
 def findDevices(group_socket, time=5):
     while True:
@@ -34,9 +33,9 @@ def handleSensor(socket, address, mutex, sensor_id):
 
         if sensor_message.type == 'DATA':
             with mutex:
-                actual_sensor_state = sensors[sensor_id]
+                actual_sensor_state = all_devices[sensor_id]
                 actual_sensor_state[0] = [sensor_message.data.data]
-                f.write(str(sensor_id) + ': ' + str(sensors[sensor_id][0][0]) + '\n')
+                f.write(str(sensor_id) + ': ' + str(all_devices[sensor_id][0][0]) + '\n')
         f.close()
 
 
@@ -45,8 +44,8 @@ def handleApplication(socket, address, mutex, global_queue):
         message = proto.Message(type='DEVICE_LIST')
 
         devices = []
-        for sensor_id in sensors.keys():
-            sensor = sensors[sensor_id]
+        for sensor_id in all_devices.keys():
+            sensor = all_devices[sensor_id]
             device = proto.Device(id=sensor_id, device_type=sensor[1], communication_type=sensor[2])
             devices.append(device)
 
@@ -69,29 +68,29 @@ def handleApplication(socket, address, mutex, global_queue):
                 sleep(2)
                 user_data = proto.Message()
                 with mutex:
-                    user_data.data.CopyFrom(proto.Data(data=sensors[user_device.device.id][0][0]))
-                    #print('enviando...' + str(sensors[user_device.device.id][0][0]))
+                    user_data.data.CopyFrom(proto.Data(data=all_devices[user_device.device.id][0][0]))
+                    #print('enviando...' + str(all_devices[user_device.device.id][0][0]))
                     socket.send(user_data.SerializeToString())
                     server_should_continue = proto.Message()
                     server_should_continue.ParseFromString(socket.recv(1024))
                     if server_should_continue.command.command == 'STOP':
                         break
         else:
-            print('esperando comando...')
+            print('Esperando comando...')
             user_command = socket.recv(1024)
-            actuator = sensors[user_device.device.id]
+            actuator = all_devices[user_device.device.id]
             actuator_socket = actuator[3]
-            print('enviando comando para o atuador...')
+            print('Enviando comando para o atuador...')
             actuator_socket.send(user_command)
             actuator_response = actuator_socket.recv(1024)
-            print('enviando resposta do atuador')
+            print('Enviando resposta do atuador')
             socket.send(actuator_response)
 
 
 
 
 def handleConnection(socket, address, mutex, global_queue):
-    global sensors_count
+    global all_devices_count
     print(f'Conexão aberta: {address}')
 
     data = socket.recv(1024)
@@ -104,16 +103,16 @@ def handleConnection(socket, address, mutex, global_queue):
         return
 
     with mutex:
-        sensors_count += 1
-        sensor_id = sensors_count
+        all_devices_count += 1
+        sensor_id = all_devices_count
         if sensor_response.discover.communication_type == 'SENSOR':
-            sensors[sensor_id] = [
+            all_devices[sensor_id] = [
                 [],
                 sensor_response.discover.device_type,
                 sensor_response.discover.communication_type
             ]
         else:
-            sensors[sensor_id] = [
+            all_devices[sensor_id] = [
                 [],
                 sensor_response.discover.device_type,
                 sensor_response.discover.communication_type,
@@ -138,6 +137,7 @@ server_socket.bind((HOST, PORT))
 server_socket.listen()
 print(f'Servidor ouvindo no endereço {HOST}:{PORT}')
 
+# gateway envia periodicamente ping para todos da lista de sensores/atuadores e quem não responder é tirado da lista
 
 discover_devices_thread = threading.Thread(target=findDevices, args=(group_socket, ))
 discover_devices_thread.start()
