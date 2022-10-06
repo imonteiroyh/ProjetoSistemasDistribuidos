@@ -37,7 +37,7 @@ message Message {
         Discover discover = 2;
         Data data = 3;
         Command command = 4;
-        CommandResponse commandResponse = 5;
+        CommandResponse command_response = 5;
         Device device = 6;
         DeviceList device_list = 7;
     }
