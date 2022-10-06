@@ -44,17 +44,25 @@ def pingDevices(group_socket, time = 1):
                     return
 
 def handleSensor(sensor_socket, address, mutex, sensor_id):
+    tolerance = 0
+
     while True:
         f = open("log.txt", 'a')
-        sensor_socket.settimeout(10)
         try:
             data = sensor_socket.recv(1024)
-            # if not data:
-            #     raise Exception
+            if not data:
+                print(tolerance)
+                if tolerance <= 5000:
+                    tolerance = tolerance + 1
+                    continue
+                else:
+                    raise Exception
         except Exception as error:
             print(f'Device {sensor_id} retirado da lista.')
             del all_devices[sensor_id]
             return
+
+        tolerance = 0
         sensor_message = proto.Message()
         sensor_message.ParseFromString(data)
 
@@ -167,6 +175,7 @@ ping_devices_thread.start()
 
 mutex = threading.Lock()
 global_queue = queue.Queue()
+socket.setdefaulttimeout(10)
 
 while True:
     connection_socket, address = server_socket.accept()

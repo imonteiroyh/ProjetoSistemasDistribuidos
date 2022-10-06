@@ -32,7 +32,7 @@ while True:
 
     user_device_id = int(input('Com qual dispositivo deseja se comunicar? '))
 
-    #print(user_device_id)
+    # print(user_device_id)
 
     device_type_requested = ''
     for device in device_message.device_list.devices:
