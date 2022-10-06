@@ -53,10 +53,10 @@ while True:
         message = proto.Message(type = 'COMMAND_RESPONSE')
         if command == 'CHANGE_STATE':
             lamp_state = not lamp_state
-            message.command_response.CopyFrom(proto.Command_response(status=True, message='STATE CHANGED'))
+            message.command_response.CopyFrom(proto.CommandResponse(status=True, message='STATE CHANGED'))
         if command == 'GET_STATE':
-            message.command_response.CopyFrom(proto.Command_response(status=True, message=str('TURNED ON' if lamp_state else 'TURNED OFF')))
+            message.command_response.CopyFrom(proto.CommandResponse(status=True, message=str('TURNED ON' if lamp_state else 'TURNED OFF')))
         if command == 'HELP':
             help_message = '\nCOMMAND: GET_STATE\nARGUMENTS: NO_ARGUMENTS\nCOMMAND: CHANGE_STATE\nARGUMENTS: NO_ARGUMENTS'
-            message.command_response.CopyFrom(proto.Command_response(status=True, message=help_message))
+            message.command_response.CopyFrom(proto.CommandResponse(status=True, message=help_message))
         sensor_socket.send(message.SerializeToString())

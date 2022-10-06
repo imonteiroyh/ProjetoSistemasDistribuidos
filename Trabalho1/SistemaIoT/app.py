@@ -32,16 +32,12 @@ while True:
 
     user_device_id = int(input('Com qual dispositivo deseja se comunicar? '))
 
-    # print(user_device_id)
-
     device_type_requested = ''
     for device in device_message.device_list.devices:
         if device.id == user_device_id:
             message = proto.Message(type='DEVICE')
             message.device.CopyFrom(proto.Device(id=device.id, device_type=device.device_type, communication_type=device.communication_type))
             device_type_requested = device.communication_type
-            # print(message.device.id)
-            # print(device_type_requested)
             app_socket.send(message.SerializeToString())
             break
 
@@ -50,15 +46,23 @@ while True:
         while True:
             message = proto.Message()
             message.ParseFromString(app_socket.recv(1024))
-            print(f'Dados: {message.data.data}')
-            continue_message = proto.Message()
-            if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
-                line = input()
-                continue_message.command.CopyFrom(proto.Command(command='STOP'))
+
+            print(message.type)
+
+            if message.type == 'COMMAND_RESPONSE':
+                if message.command_response.message == 'Dispositivo não encontrado':
+                    print('Erro de conexão com o dispositivo')
+                    break
+            else:
+                print(f'Dados: {message.data.data}')
+                continue_message = proto.Message()
+                if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
+                    line = input()
+                    continue_message.command.CopyFrom(proto.Command(command='STOP'))
+                    app_socket.send(continue_message.SerializeToString())
+                    break
+                continue_message.command.CopyFrom(proto.Command(command='CONTINUE'))
                 app_socket.send(continue_message.SerializeToString())
-                break
-            continue_message.command.CopyFrom(proto.Command(command='CONTINUE'))
-            app_socket.send(continue_message.SerializeToString())
 
     else:
         user_command = input('Digite o comando que deseja enviar para o atuador: ')
@@ -67,7 +71,13 @@ while True:
         message.command.CopyFrom(proto.Command(command=user_command, arguments=user_arguments))
         app_socket.send(message.SerializeToString())
         message = proto.Message()
+        print('aqui')
         message.ParseFromString(app_socket.recv(1024))
-        print()
-        print(f'Status: {message.command_response.status}')
-        print(f'Mensagem: {message.command_response.message}')
+        print('aqui2')
+
+        if message.command_response.message == 'Dispositivo não encontrado':
+            print('Erro de conexão com o dispositivo')
+        else:
+            print()
+            print(f'Status: {message.command_response.status}')
+            print(f'Mensagem: {message.command_response.message}')

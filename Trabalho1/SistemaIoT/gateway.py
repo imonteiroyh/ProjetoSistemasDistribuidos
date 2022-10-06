@@ -51,7 +51,6 @@ def handleSensor(sensor_socket, address, mutex, sensor_id):
         try:
             data = sensor_socket.recv(1024)
             if not data:
-                print(tolerance)
                 if tolerance <= 5000:
                     tolerance = tolerance + 1
                     continue
@@ -75,6 +74,7 @@ def handleSensor(sensor_socket, address, mutex, sensor_id):
 
 
 def handleApplication(socket, address, mutex, global_queue):
+    socket.settimeout(None)
     while True:
         message = proto.Message(type='DEVICE_LIST')
 
@@ -94,32 +94,49 @@ def handleApplication(socket, address, mutex, global_queue):
         if user_device.device.id == 0:
             print('Erro de conexão com a aplicação')
             break
-
-        print(f'ID do dispositivo: {user_device.device.id}')
-        print(f'Tipo de dispositivo: {user_device.device.device_type}')
-
-        if user_device.device.communication_type == 'SENSOR':
-            while True:
-                sleep(2)
-                user_data = proto.Message()
-                with mutex:
-                    user_data.data.CopyFrom(proto.Data(data=all_devices[user_device.device.id][0][0]))
-                    #print('Enviando...' + str(all_devices[user_device.device.id][0][0]))
-                    socket.send(user_data.SerializeToString())
-                    server_should_continue = proto.Message()
-                    server_should_continue.ParseFromString(socket.recv(1024))
-                    if server_should_continue.command.command == 'STOP':
-                        break
+        
         else:
-            print('Esperando comando...')
-            user_command = socket.recv(1024)
-            actuator = all_devices[user_device.device.id]
-            actuator_socket = actuator[3]
-            print('Enviando comando para o atuador...')
-            actuator_socket.send(user_command)
-            actuator_response = actuator_socket.recv(1024)
-            print('Enviando resposta do atuador')
-            socket.send(actuator_response)
+            print(f'ID do dispositivo: {user_device.device.id}')
+            print(f'Tipo de dispositivo: {user_device.device.device_type}')
+
+            if user_device.device.communication_type == 'SENSOR':
+
+                try:
+                    with mutex:
+                        device = all_devices[user_device.device.id]
+                except:
+                    device_not_found = proto.Message(type='COMMAND_RESPONSE')
+                    device_not_found.command_response.CopyFrom(proto.CommandResponse(status=False, message='Dispositivo não encontrado'))
+                    socket.send(device_not_found.SerializeToString())
+                    continue
+
+                while True:
+                    sleep(2)
+                    user_data = proto.Message()
+                    with mutex:
+                        user_data.data.CopyFrom(proto.Data(data=all_devices[user_device.device.id][0][0]))
+                        socket.send(user_data.SerializeToString())
+                        server_should_continue = proto.Message()
+                        server_should_continue.ParseFromString(socket.recv(1024))
+                        if server_should_continue.command.command == 'STOP':
+                            break
+            else:
+                print('Esperando comando...')
+                user_command = socket.recv(1024)
+
+                try:
+                    with mutex:
+                        actuator = all_devices[user_device.device.id]
+                        actuator_socket = actuator[3]
+                        print('Enviando comando para o atuador...')
+                        actuator_socket.send(user_command)
+                        actuator_response = actuator_socket.recv(1024)
+                        print('Enviando resposta do atuador')
+                        socket.send(actuator_response)
+                except:
+                    device_not_found = proto.Message(type='COMMAND_RESPONSE')
+                    device_not_found.command_response.CopyFrom(proto.CommandResponse(status=False, message='Dispositivo não encontrado'))
+                    socket.send(device_not_found.SerializeToString())
 
 
 

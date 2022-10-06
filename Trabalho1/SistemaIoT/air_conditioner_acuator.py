@@ -53,10 +53,10 @@ while True:
         message = proto.Message(type = 'COMMAND_RESPONSE')
         if command == 'CHANGE_TEMP':
             temp = arguments[0]
-            message.command_response.CopyFrom(proto.Command_response(status=True, message='TEMPERATURE CHANGED'))
+            message.command_response.CopyFrom(proto.CommandResponse(status=True, message='TEMPERATURE CHANGED'))
         if command == 'GET_TEMP':
-            message.command_response.CopyFrom(proto.Command_response(status=True, message=str(temp)))
+            message.command_response.CopyFrom(proto.CommandResponse(status=True, message=str(temp)))
         if command == 'HELP':
             help_message = '\nCOMMAND: GET_TEMP\nARGUMENTS: NO_ARGUMENTS\nCOMMAND: CHANGE_TEMP\nARGUMENTS: TEMPERATURE'
-            message.command_response.CopyFrom(proto.Command_response(status=True, message=help_message))
+            message.command_response.CopyFrom(proto.CommandResponse(status=True, message=help_message))
         sensor_socket.send(message.SerializeToString())
