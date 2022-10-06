@@ -69,5 +69,5 @@ while True:
         message = proto.Message()
         message.ParseFromString(app_socket.recv(1024))
         print()
-        print(f'Status: {message.commandResponse.status}')
-        print(f'Mensagem: {message.commandResponse.message}')
+        print(f'Status: {message.command_response.status}')
+        print(f'Mensagem: {message.command_response.message}')

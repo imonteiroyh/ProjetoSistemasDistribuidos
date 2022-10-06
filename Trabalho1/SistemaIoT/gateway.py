@@ -12,7 +12,7 @@ all_devices_count = 0
 
 all_devices = {}
 
-def findDevices(group_socket, time=5):
+def findDevices(group_socket, time=3):
     while True:
         print('Descobrindo dispositivos...')
         message = proto.Message()
@@ -23,11 +23,34 @@ def findDevices(group_socket, time=5):
         group_socket.sendto(message.SerializeToString(), (GROUP_HOST, GROUP_PORT))
         sleep(time)
 
+def pingDevices(group_socket, time = 1):
+    global all_devices
+
+    while True:
+        sleep(5)
+        iter_devices = all_devices.keys()
+        for key in iter_devices:
+            if all_devices[key][2] == 'ACTUATOR':
+                current_socket = all_devices[key][3]
+                try:
+                    message = proto.Message(type = 'COMMAND')
+                    message.command.CopyFrom(proto.Command(command = 'PING'))
+                    current_socket.send(message.SerializeToString())
+                    current_socket.recv(1024)
+                except Exception as error:
+                    print(f'Atuador {key} retirado da lista.')
+                    del all_devices[key]
+                    return
 
 def handleSensor(socket, address, mutex, sensor_id):
     while True:
         f = open("log.txt", 'a')
-        data = socket.recv(1024)
+        try:
+            data = socket.recv(1024)
+        except Exception as error:
+            print(f'Device {sensor_id} retirado da lista.')
+            del all_devices[sensor_id]
+            return
         sensor_message = proto.Message()
         sensor_message.ParseFromString(data)
 
@@ -60,7 +83,7 @@ def handleApplication(socket, address, mutex, global_queue):
             print('Erro de conexão com a aplicação')
             break
 
-        print(f'Id do dispositivo: {user_device.device.id}')
+        print(f'ID do dispositivo: {user_device.device.id}')
         print(f'Tipo de dispositivo: {user_device.device.device_type}')
 
         if user_device.device.communication_type == 'SENSOR':
@@ -69,7 +92,7 @@ def handleApplication(socket, address, mutex, global_queue):
                 user_data = proto.Message()
                 with mutex:
                     user_data.data.CopyFrom(proto.Data(data=all_devices[user_device.device.id][0][0]))
-                    #print('enviando...' + str(all_devices[user_device.device.id][0][0]))
+                    #print('Enviando...' + str(all_devices[user_device.device.id][0][0]))
                     socket.send(user_data.SerializeToString())
                     server_should_continue = proto.Message()
                     server_should_continue.ParseFromString(socket.recv(1024))
@@ -105,19 +128,12 @@ def handleConnection(socket, address, mutex, global_queue):
     with mutex:
         all_devices_count += 1
         sensor_id = all_devices_count
-        if sensor_response.discover.communication_type == 'SENSOR':
-            all_devices[sensor_id] = [
-                [],
-                sensor_response.discover.device_type,
-                sensor_response.discover.communication_type
-            ]
-        else:
-            all_devices[sensor_id] = [
-                [],
-                sensor_response.discover.device_type,
-                sensor_response.discover.communication_type,
-                socket
-            ]
+        all_devices[sensor_id] = [
+            [],
+            sensor_response.discover.device_type,
+            sensor_response.discover.communication_type,
+            socket
+        ]
 
     print(f'Dispositivo adicionado: {sensor_response.discover.device_type}')
 
@@ -141,6 +157,9 @@ print(f'Servidor ouvindo no endereço {HOST}:{PORT}')
 
 discover_devices_thread = threading.Thread(target=findDevices, args=(group_socket, ))
 discover_devices_thread.start()
+
+ping_devices_thread = threading.Thread(target=pingDevices, args=(group_socket, ))
+ping_devices_thread.start()
 
 mutex = threading.Lock()
 global_queue = queue.Queue()
