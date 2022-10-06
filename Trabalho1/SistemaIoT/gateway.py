@@ -36,17 +36,21 @@ def pingDevices(group_socket, time = 1):
                     message = proto.Message(type = 'COMMAND')
                     message.command.CopyFrom(proto.Command(command = 'PING'))
                     current_socket.send(message.SerializeToString())
+                    current_socket.settimeout(10)
                     current_socket.recv(1024)
                 except Exception as error:
-                    print(f'Atuador {key} retirado da lista.')
+                    print(f'Device {key} retirado da lista.')
                     del all_devices[key]
                     return
 
-def handleSensor(socket, address, mutex, sensor_id):
+def handleSensor(sensor_socket, address, mutex, sensor_id):
     while True:
         f = open("log.txt", 'a')
+        sensor_socket.settimeout(10)
         try:
-            data = socket.recv(1024)
+            data = sensor_socket.recv(1024)
+            # if not data:
+            #     raise Exception
         except Exception as error:
             print(f'Device {sensor_id} retirado da lista.')
             del all_devices[sensor_id]

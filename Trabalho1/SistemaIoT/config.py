@@ -3,7 +3,7 @@ from contextlib import closing
 
 GROUP_HOST = '228.0.0.7'
 GROUP_PORT = 19000
-GATEWAY_PORT = 7904
+GATEWAY_PORT = 7908
 
 def find_free_port():
     with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as _socket:

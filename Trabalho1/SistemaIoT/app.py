@@ -40,8 +40,8 @@ while True:
             message = proto.Message(type='DEVICE')
             message.device.CopyFrom(proto.Device(id=device.id, device_type=device.device_type, communication_type=device.communication_type))
             device_type_requested = device.communication_type
-            #rint(message.device.id)
-            #print(device_type_requested)
+            # print(message.device.id)
+            # print(device_type_requested)
             app_socket.send(message.SerializeToString())
             break
 
