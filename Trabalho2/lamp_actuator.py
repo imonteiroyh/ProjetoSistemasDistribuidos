@@ -1,26 +1,24 @@
 import grpc
-import lamp_pb2 as lamp
-import lamp_pb2_grpc as lamp_service
 from concurrent import futures
+from proto import lamp_pb2
+from proto import lamp_pb2_grpc
 
-
-class LampService(lamp_service.LampServicer):
+class LampService(lamp_pb2_grpc.LampServicer):
 
     def __init__(self) -> None:
         self.state = True
         super().__init__()
 
-    def retrieve_state(self, request, context):
-        return lamp.Response(status=True, message='Turned on')
-
+    def get_state(self, request, context):
+        return lamp_pb2.Response(status=True, message='Turned on')
 
 def main():
     port = '5000'
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    lamp_service.add_LampServicer_to_server(LampService(), server)
+    lamp_pb2_grpc.add_LampServicer_to_server(LampService(), server)
     server.add_insecure_port('localhost:' + port)
     server.start()
-    print('ouvindo')
+    print('Funcionando')
     server.wait_for_termination()
 
 if __name__ == '__main__':

@@ -2,12 +2,12 @@ syntax = "proto3";
 
 service Lamp {
     rpc change_state (ChangeStateRequest) returns (Response) {}
-    rpc retrieve_state (EmptyRequest) returns (Response) {}
+    rpc get_state (GetStateRequest) returns (Response) {}
     rpc change_color (ColorRequest) returns (Response) {}
 }
 
-message EmptyRequest {
-    optional bool empty = 1;
+message GetStateRequest {
+
 }
 
 message ColorRequest {

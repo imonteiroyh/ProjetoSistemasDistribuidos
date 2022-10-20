@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+service AirConditioner {
+    rpc change_temperature (ChangeTemperatureRequest) returns (Response) {}
+    rpc get_temperature (GetTemperatureRequest) returns (Response) {}
+}
+
+message ChangeTemperatureRequest {
+    optional string temperature = 1;
+}
+
+message GetTemperatureRequest {
+
+}
+
+message Response {
+    optional bool status = 1;
+    optional string message = 2;
+}
