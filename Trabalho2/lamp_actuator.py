@@ -10,7 +10,7 @@ class LampService(lamp_pb2_grpc.LampServicer):
         super().__init__()
 
     def get_state(self, request, context):
-        return lamp_pb2.Response(status=True, message='Turned on')
+        return lamp_pb2.LampResponse(status=True, message='Turned on')
 
 def main():
     port = '5000'

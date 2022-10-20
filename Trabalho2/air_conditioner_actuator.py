@@ -10,7 +10,7 @@ class AirConditionerService(air_conditioner_pb2_grpc.AirConditionerServicer):
         super().__init__()
 
     def get_temperature(self, request, context):
-        return air_conditioner_pb2.Response(status = True, message = 'Temperature is 25')
+        return air_conditioner_pb2.AirConditionerResponse(status = True, message = 'Temperature is 25')
 
 def main():
     port = '5000'

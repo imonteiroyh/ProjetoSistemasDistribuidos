@@ -17,17 +17,17 @@ class LampStub(object):
         self.change_state = channel.unary_unary(
                 '/Lamp/change_state',
                 request_serializer=proto_dot_lamp__pb2.ChangeStateRequest.SerializeToString,
-                response_deserializer=proto_dot_lamp__pb2.Response.FromString,
+                response_deserializer=proto_dot_lamp__pb2.LampResponse.FromString,
                 )
         self.get_state = channel.unary_unary(
                 '/Lamp/get_state',
                 request_serializer=proto_dot_lamp__pb2.GetStateRequest.SerializeToString,
-                response_deserializer=proto_dot_lamp__pb2.Response.FromString,
+                response_deserializer=proto_dot_lamp__pb2.LampResponse.FromString,
                 )
         self.change_color = channel.unary_unary(
                 '/Lamp/change_color',
                 request_serializer=proto_dot_lamp__pb2.ColorRequest.SerializeToString,
-                response_deserializer=proto_dot_lamp__pb2.Response.FromString,
+                response_deserializer=proto_dot_lamp__pb2.LampResponse.FromString,
                 )
 
 
@@ -58,17 +58,17 @@ def add_LampServicer_to_server(servicer, server):
             'change_state': grpc.unary_unary_rpc_method_handler(
                     servicer.change_state,
                     request_deserializer=proto_dot_lamp__pb2.ChangeStateRequest.FromString,
-                    response_serializer=proto_dot_lamp__pb2.Response.SerializeToString,
+                    response_serializer=proto_dot_lamp__pb2.LampResponse.SerializeToString,
             ),
             'get_state': grpc.unary_unary_rpc_method_handler(
                     servicer.get_state,
                     request_deserializer=proto_dot_lamp__pb2.GetStateRequest.FromString,
-                    response_serializer=proto_dot_lamp__pb2.Response.SerializeToString,
+                    response_serializer=proto_dot_lamp__pb2.LampResponse.SerializeToString,
             ),
             'change_color': grpc.unary_unary_rpc_method_handler(
                     servicer.change_color,
                     request_deserializer=proto_dot_lamp__pb2.ColorRequest.FromString,
-                    response_serializer=proto_dot_lamp__pb2.Response.SerializeToString,
+                    response_serializer=proto_dot_lamp__pb2.LampResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -93,7 +93,7 @@ class Lamp(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Lamp/change_state',
             proto_dot_lamp__pb2.ChangeStateRequest.SerializeToString,
-            proto_dot_lamp__pb2.Response.FromString,
+            proto_dot_lamp__pb2.LampResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -110,7 +110,7 @@ class Lamp(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Lamp/get_state',
             proto_dot_lamp__pb2.GetStateRequest.SerializeToString,
-            proto_dot_lamp__pb2.Response.FromString,
+            proto_dot_lamp__pb2.LampResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -127,6 +127,6 @@ class Lamp(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Lamp/change_color',
             proto_dot_lamp__pb2.ColorRequest.SerializeToString,
-            proto_dot_lamp__pb2.Response.FromString,
+            proto_dot_lamp__pb2.LampResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

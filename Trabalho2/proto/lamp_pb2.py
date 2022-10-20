@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10proto/lamp.proto\"\x11\n\x0fGetStateRequest\"4\n\x0c\x43olorRequest\x12\x16\n\thex_color\x18\x01 \x01(\tH\x00\x88\x01\x01\x42\x0c\n\n_hex_color\"2\n\x12\x43hangeStateRequest\x12\x12\n\x05state\x18\x01 \x01(\x08H\x00\x88\x01\x01\x42\x08\n\x06_state\"L\n\x08Response\x12\x13\n\x06status\x18\x01 \x01(\x08H\x00\x88\x01\x01\x12\x14\n\x07message\x18\x02 \x01(\tH\x01\x88\x01\x01\x42\t\n\x07_statusB\n\n\x08_message2\x90\x01\n\x04Lamp\x12\x30\n\x0c\x63hange_state\x12\x13.ChangeStateRequest\x1a\t.Response\"\x00\x12*\n\tget_state\x12\x10.GetStateRequest\x1a\t.Response\"\x00\x12*\n\x0c\x63hange_color\x12\r.ColorRequest\x1a\t.Response\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10proto/lamp.proto\"\x11\n\x0fGetStateRequest\"4\n\x0c\x43olorRequest\x12\x16\n\thex_color\x18\x01 \x01(\tH\x00\x88\x01\x01\x42\x0c\n\n_hex_color\"2\n\x12\x43hangeStateRequest\x12\x12\n\x05state\x18\x01 \x01(\x08H\x00\x88\x01\x01\x42\x08\n\x06_state\"P\n\x0cLampResponse\x12\x13\n\x06status\x18\x01 \x01(\x08H\x00\x88\x01\x01\x12\x14\n\x07message\x18\x02 \x01(\tH\x01\x88\x01\x01\x42\t\n\x07_statusB\n\n\x08_message2\x9c\x01\n\x04Lamp\x12\x34\n\x0c\x63hange_state\x12\x13.ChangeStateRequest\x1a\r.LampResponse\"\x00\x12.\n\tget_state\x12\x10.GetStateRequest\x1a\r.LampResponse\"\x00\x12.\n\x0c\x63hange_color\x12\r.ColorRequest\x1a\r.LampResponse\"\x00\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'proto.lamp_pb2', globals())
@@ -26,8 +26,8 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _COLORREQUEST._serialized_end=91
   _CHANGESTATEREQUEST._serialized_start=93
   _CHANGESTATEREQUEST._serialized_end=143
-  _RESPONSE._serialized_start=145
-  _RESPONSE._serialized_end=221
-  _LAMP._serialized_start=224
-  _LAMP._serialized_end=368
+  _LAMPRESPONSE._serialized_start=145
+  _LAMPRESPONSE._serialized_end=225
+  _LAMP._serialized_start=228
+  _LAMP._serialized_end=384
 # @@protoc_insertion_point(module_scope)

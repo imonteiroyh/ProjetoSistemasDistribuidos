@@ -17,12 +17,12 @@ class AirConditionerStub(object):
         self.change_temperature = channel.unary_unary(
                 '/AirConditioner/change_temperature',
                 request_serializer=proto_dot_air__conditioner__pb2.ChangeTemperatureRequest.SerializeToString,
-                response_deserializer=proto_dot_air__conditioner__pb2.Response.FromString,
+                response_deserializer=proto_dot_air__conditioner__pb2.AirConditionerResponse.FromString,
                 )
         self.get_temperature = channel.unary_unary(
                 '/AirConditioner/get_temperature',
                 request_serializer=proto_dot_air__conditioner__pb2.GetTemperatureRequest.SerializeToString,
-                response_deserializer=proto_dot_air__conditioner__pb2.Response.FromString,
+                response_deserializer=proto_dot_air__conditioner__pb2.AirConditionerResponse.FromString,
                 )
 
 
@@ -47,12 +47,12 @@ def add_AirConditionerServicer_to_server(servicer, server):
             'change_temperature': grpc.unary_unary_rpc_method_handler(
                     servicer.change_temperature,
                     request_deserializer=proto_dot_air__conditioner__pb2.ChangeTemperatureRequest.FromString,
-                    response_serializer=proto_dot_air__conditioner__pb2.Response.SerializeToString,
+                    response_serializer=proto_dot_air__conditioner__pb2.AirConditionerResponse.SerializeToString,
             ),
             'get_temperature': grpc.unary_unary_rpc_method_handler(
                     servicer.get_temperature,
                     request_deserializer=proto_dot_air__conditioner__pb2.GetTemperatureRequest.FromString,
-                    response_serializer=proto_dot_air__conditioner__pb2.Response.SerializeToString,
+                    response_serializer=proto_dot_air__conditioner__pb2.AirConditionerResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -77,7 +77,7 @@ class AirConditioner(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/AirConditioner/change_temperature',
             proto_dot_air__conditioner__pb2.ChangeTemperatureRequest.SerializeToString,
-            proto_dot_air__conditioner__pb2.Response.FromString,
+            proto_dot_air__conditioner__pb2.AirConditionerResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -94,6 +94,6 @@ class AirConditioner(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/AirConditioner/get_temperature',
             proto_dot_air__conditioner__pb2.GetTemperatureRequest.SerializeToString,
-            proto_dot_air__conditioner__pb2.Response.FromString,
+            proto_dot_air__conditioner__pb2.AirConditionerResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
