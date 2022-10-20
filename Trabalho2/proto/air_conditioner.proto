@@ -1,15 +1,15 @@
 syntax = "proto3";
 
 service AirConditioner {
-    rpc change_temperature (ChangeTemperatureRequest) returns (AirConditionerResponse) {}
-    rpc get_temperature (GetTemperatureRequest) returns (AirConditionerResponse) {}
+    rpc change_temperature (ChangeAirConditionerTemperatureRequest) returns (AirConditionerResponse) {}
+    rpc get_temperature (GetAirConditionerTemperatureRequest) returns (AirConditionerResponse) {}
 }
 
-message ChangeTemperatureRequest {
+message ChangeAirConditionerTemperatureRequest {
     optional string temperature = 1;
 }
 
-message GetTemperatureRequest {
+message GetAirConditionerTemperatureRequest {
 
 }
 

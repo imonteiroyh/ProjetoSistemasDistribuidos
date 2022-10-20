@@ -1,20 +1,20 @@
 syntax = "proto3";
 
 service Lamp {
-    rpc change_state (ChangeStateRequest) returns (LampResponse) {}
-    rpc get_state (GetStateRequest) returns (LampResponse) {}
-    rpc change_color (ColorRequest) returns (LampResponse) {}
+    rpc change_state (ChangeLampStateRequest) returns (LampResponse) {}
+    rpc get_state (GetLampStateRequest) returns (LampResponse) {}
+    rpc change_color (ChangeLampColorRequest) returns (LampResponse) {}
 }
 
-message GetStateRequest {
+message GetLampStateRequest {
 
 }
 
-message ColorRequest {
+message ChangeLampColorRequest {
     optional string hex_color = 1;
 }
 
-message ChangeStateRequest {
+message ChangeLampStateRequest {
     optional bool state = 1;
 }
 

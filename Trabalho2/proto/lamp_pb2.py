@@ -13,21 +13,21 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10proto/lamp.proto\"\x11\n\x0fGetStateRequest\"4\n\x0c\x43olorRequest\x12\x16\n\thex_color\x18\x01 \x01(\tH\x00\x88\x01\x01\x42\x0c\n\n_hex_color\"2\n\x12\x43hangeStateRequest\x12\x12\n\x05state\x18\x01 \x01(\x08H\x00\x88\x01\x01\x42\x08\n\x06_state\"P\n\x0cLampResponse\x12\x13\n\x06status\x18\x01 \x01(\x08H\x00\x88\x01\x01\x12\x14\n\x07message\x18\x02 \x01(\tH\x01\x88\x01\x01\x42\t\n\x07_statusB\n\n\x08_message2\x9c\x01\n\x04Lamp\x12\x34\n\x0c\x63hange_state\x12\x13.ChangeStateRequest\x1a\r.LampResponse\"\x00\x12.\n\tget_state\x12\x10.GetStateRequest\x1a\r.LampResponse\"\x00\x12.\n\x0c\x63hange_color\x12\r.ColorRequest\x1a\r.LampResponse\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10proto/lamp.proto\"\x15\n\x13GetLampStateRequest\">\n\x16\x43hangeLampColorRequest\x12\x16\n\thex_color\x18\x01 \x01(\tH\x00\x88\x01\x01\x42\x0c\n\n_hex_color\"6\n\x16\x43hangeLampStateRequest\x12\x12\n\x05state\x18\x01 \x01(\x08H\x00\x88\x01\x01\x42\x08\n\x06_state\"P\n\x0cLampResponse\x12\x13\n\x06status\x18\x01 \x01(\x08H\x00\x88\x01\x01\x12\x14\n\x07message\x18\x02 \x01(\tH\x01\x88\x01\x01\x42\t\n\x07_statusB\n\n\x08_message2\xae\x01\n\x04Lamp\x12\x38\n\x0c\x63hange_state\x12\x17.ChangeLampStateRequest\x1a\r.LampResponse\"\x00\x12\x32\n\tget_state\x12\x14.GetLampStateRequest\x1a\r.LampResponse\"\x00\x12\x38\n\x0c\x63hange_color\x12\x17.ChangeLampColorRequest\x1a\r.LampResponse\"\x00\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'proto.lamp_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _GETSTATEREQUEST._serialized_start=20
-  _GETSTATEREQUEST._serialized_end=37
-  _COLORREQUEST._serialized_start=39
-  _COLORREQUEST._serialized_end=91
-  _CHANGESTATEREQUEST._serialized_start=93
-  _CHANGESTATEREQUEST._serialized_end=143
-  _LAMPRESPONSE._serialized_start=145
-  _LAMPRESPONSE._serialized_end=225
-  _LAMP._serialized_start=228
-  _LAMP._serialized_end=384
+  _GETLAMPSTATEREQUEST._serialized_start=20
+  _GETLAMPSTATEREQUEST._serialized_end=41
+  _CHANGELAMPCOLORREQUEST._serialized_start=43
+  _CHANGELAMPCOLORREQUEST._serialized_end=105
+  _CHANGELAMPSTATEREQUEST._serialized_start=107
+  _CHANGELAMPSTATEREQUEST._serialized_end=161
+  _LAMPRESPONSE._serialized_start=163
+  _LAMPRESPONSE._serialized_end=243
+  _LAMP._serialized_start=246
+  _LAMP._serialized_end=420
 # @@protoc_insertion_point(module_scope)

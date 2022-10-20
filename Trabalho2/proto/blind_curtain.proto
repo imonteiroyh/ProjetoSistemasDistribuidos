@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+service BlindCurtain {
+    rpc change_state (ChangeBlindCurtainStateRequest) returns (BlindCurtainResponse) {}
+    rpc get_state (GetBlindCurtainStateRequest) returns (BlindCurtainResponse) {}
+}
+
+message ChangeBlindCurtainStateRequest {
+    optional string state = 1;
+}
+
+message GetBlindCurtainStateRequest {
+
+}
+
+message BlindCurtainResponse {
+    optional bool status = 1;
+    optional string message = 2;
+}
