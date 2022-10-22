@@ -9,17 +9,23 @@ from proto import blind_curtain_pb2_grpc
 import pika
 import threading
 
-def main():
+def temperature_sensor_callback(ch, method, properties, body):
+    print(f'Data received from temperature sensor: {int(body)}')
 
-    def temperature_sensor_callback(ch, method, properties, body):
-        print(f'Data received from temperature sensor: {int(body)}')
+def motion_sensor_callback(ch, method, properties, body):
+    print(f'Data received from motion sensor: {int(body)}')
+
+def main():
 
     connection = pika.BlockingConnection(pika.ConnectionParameters(HOST))
     channel = connection.channel()
     print('Connected to RabbitMQ')
 
-    temperature_sensor_thread = threading.Thread(target=subscribe, args=(channel, 'temperature_sensor', temperature_sensor_callback))
-    temperature_sensor_thread.start()
+    # temperature_sensor_thread = threading.Thread(target=subscribe, args=(channel, 'temperature_sensor', temperature_sensor_callback))
+    # temperature_sensor_thread.start()
+
+    motion_sensor_thread = threading.Thread(target=subscribe, args=(channel, 'motion_sensor', motion_sensor_callback))
+    motion_sensor_thread.start()
 
     # with grpc.insecure_channel(HOST + ':' + LAMP_PORT) as LampChannel:
     #     lamp_service = lamp_pb2_grpc.LampStub(LampChannel)
