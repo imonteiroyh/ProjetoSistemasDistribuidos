@@ -1,3 +1,4 @@
+from config import HOST, LAMP_PORT
 import grpc
 from concurrent import futures
 from proto import lamp_pb2
@@ -13,10 +14,9 @@ class LampService(lamp_pb2_grpc.LampServicer):
         return lamp_pb2.LampResponse(status=True, message='Turned on')
 
 def main():
-    port = '5000'
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     lamp_pb2_grpc.add_LampServicer_to_server(LampService(), server)
-    server.add_insecure_port('localhost:' + port)
+    server.add_insecure_port(HOST + ':' + LAMP_PORT)
     server.start()
     print('Funcionando')
     server.wait_for_termination()

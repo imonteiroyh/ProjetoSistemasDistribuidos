@@ -1,3 +1,4 @@
+from config import HOST, AIR_CONDITIONER_PORT
 import grpc
 from concurrent import futures
 from proto import air_conditioner_pb2
@@ -13,10 +14,9 @@ class AirConditionerService(air_conditioner_pb2_grpc.AirConditionerServicer):
         return air_conditioner_pb2.AirConditionerResponse(status = True, message = 'Temperature is 25')
 
 def main():
-    port = '5000'
     server = grpc.server(futures.ThreadPoolExecutor(max_workers = 10))
     air_conditioner_pb2_grpc.add_AirConditionerServicer_to_server(AirConditionerService(), server)
-    server.add_insecure_port('localhost:' + port)
+    server.add_insecure_port(HOST + ':' + AIR_CONDITIONER_PORT)
     server.start()
     print('Funcionando')
     server.wait_for_termination()
