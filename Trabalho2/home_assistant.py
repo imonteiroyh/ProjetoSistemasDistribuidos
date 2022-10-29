@@ -6,6 +6,7 @@ from proto import air_conditioner_pb2
 from proto import air_conditioner_pb2_grpc
 from proto import blind_curtain_pb2
 from proto import blind_curtain_pb2_grpc
+import ThreadedConsumer
 import pika
 import threading
 
@@ -17,15 +18,27 @@ def motion_sensor_callback(ch, method, properties, body):
 
 def main():
 
-    connection = pika.BlockingConnection(pika.ConnectionParameters(HOST))
-    channel = connection.channel()
-    print('Connected to RabbitMQ')
+    air_conditioner_thread = ThreadedConsumer.ThreadedConsumer('temperature_sensor', temperature_sensor_callback)
+    air_conditioner_thread.start()
 
-    # temperature_sensor_thread = threading.Thread(target=subscribe, args=(channel, 'temperature_sensor', temperature_sensor_callback))
+    lamp_thread = ThreadedConsumer.ThreadedConsumer('motion_sensor', motion_sensor_callback)
+    lamp_thread.start()
+
+
+
+    # connection = pika.BlockingConnection(pika.ConnectionParameters(HOST))
+    # channel = connection.channel()
+
+
+    # temperature_sensor_channel = connection.channel()
+    # print('Temperature Sensor Connected to RabbitMQ')
+    # temperature_sensor_thread = threading.Thread(target=subscribe, args=(temperature_sensor_channel, 'temperature_sensor', temperature_sensor_callback))
     # temperature_sensor_thread.start()
 
-    motion_sensor_thread = threading.Thread(target=subscribe, args=(channel, 'motion_sensor', motion_sensor_callback))
-    motion_sensor_thread.start()
+    # motion_sensor_channel = connection.channel()
+    # print('Motion Sensor Connected to RabbitMQ')
+    # motion_sensor_thread = threading.Thread(target=subscribe, args=(motion_sensor_channel, 'motion_sensor', motion_sensor_callback))
+    # motion_sensor_thread.start()
 
     # with grpc.insecure_channel(HOST + ':' + LAMP_PORT) as LampChannel:
     #     lamp_service = lamp_pb2_grpc.LampStub(LampChannel)
@@ -44,14 +57,14 @@ def main():
 
 def subscribe(channel, exchange, callback):
     channel.exchange_declare(exchange=exchange, exchange_type='fanout')
-    air_conditioner_queue = channel.queue_declare(queue='', exclusive=True)
-    air_conditioner_queue_name = air_conditioner_queue.method.queue
-    channel.queue_bind(exchange=exchange, queue=air_conditioner_queue_name)
+    queue = channel.queue_declare(queue='', exclusive=True)
+    queue_name = queue.method.queue
+    channel.queue_bind(exchange=exchange, queue=queue_name)
 
     print('Waiting for data...')
 
     channel.basic_consume(
-        queue=air_conditioner_queue_name,
+        queue=queue_name,
         on_message_callback=callback,
         auto_ack=True
     )
