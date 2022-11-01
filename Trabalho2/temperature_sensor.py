@@ -10,8 +10,8 @@ class TemperatureSensor:
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(RABBITMQ_HOST))
         self.channel = self.connection.channel()
         self.channel.exchange_declare(exchange=self.exchange_name, exchange_type='fanout')
-        print('Connected to RabbitMQ')
-        self.target=target
+        print('Temperature sensor connected to RabbitMQ')
+        self.target = target
         self.temperature = target
 
     def generate_data(self):
@@ -28,6 +28,9 @@ class TemperatureSensor:
                 body=str(self.temperature)
             )
             sleep(5)
+        
+    def change_target(self, target):
+        self.target = target
 
     def run(self):
         temperature_sensor_thread = threading.Thread(target=self.generate_data)

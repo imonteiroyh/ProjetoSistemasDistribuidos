@@ -14,8 +14,8 @@ from pydantic import BaseModel
 from typing import Union
 
 def temperature_sensor_callback(ch, method, properties, body):
-    pass
-    #print(f'Data received from temperature sensor: {int(body)}')
+    #pass
+    print(f'Data received from temperature sensor: {int(body)}')
 
 def motion_sensor_callback(ch, method, properties, body):
     print(f'Data received from motion sensor: {int(body)}')
@@ -50,7 +50,17 @@ def air_conditioner_service(request: ApplicationRequest):
 
     if request.command == 'get_temperature':
         service_response = services.air_conditioner_service.get_temperature(air_conditioner_pb2.GetAirConditionerTemperatureRequest())
-        response = {'Temperature': int(service_response.message)}
+        if service_response.status == True:
+            response = {'Temperature': int(service_response.message)}
+        else:
+            response = {'Message': 'An error has occurred'}
+
+    if request.command == 'change_temperature':
+        service_response = services.air_conditioner_service.change_temperature(air_conditioner_pb2.ChangeAirConditionerTemperatureRequest(temperature=str(request.arguments)))
+        if service_response.status == True:
+            response = {'Message': service_response.message}
+        else:
+            response = {'Message': 'An error has occurred'}
 
     return response
 
