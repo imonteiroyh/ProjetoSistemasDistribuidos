@@ -1,7 +1,6 @@
 from proto.air_conditioner_pb2 import AirConditionerResponse
 from proto.air_conditioner_pb2_grpc import AirConditionerServicer
 
-
 class AirConditionerActuator(AirConditionerServicer):
     def __init__(self, change_temperature_callback) -> None:
         self.state = True
@@ -17,4 +16,3 @@ class AirConditionerActuator(AirConditionerServicer):
         self.temperature = int(request.temperature)
         self.callback(self.temperature)
         return AirConditionerResponse(status=True, message=f'Temperature setted to {self.temperature}')
-

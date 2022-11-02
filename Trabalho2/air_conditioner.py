@@ -3,7 +3,7 @@ from concurrent import futures
 from proto.air_conditioner_pb2_grpc import add_AirConditionerServicer_to_server
 from config import HOST, AIR_CONDITIONER_PORT
 from components.temperature_sensor import TemperatureSensor
-from components.air_conditioner_acuator import AirConditionerActuator
+from components.air_conditioner_actuator import AirConditionerActuator
 
 
 temperature_sensor = TemperatureSensor(HOST)
