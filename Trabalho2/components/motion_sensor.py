@@ -25,7 +25,7 @@ class MotionSensor:
                 routing_key='',
                 body=str(self.motion)
             )
-            sleep(30)
+            sleep(2)
 
     def run(self):
         motion_sensor_thread = threading.Thread(target=self.generate_data)

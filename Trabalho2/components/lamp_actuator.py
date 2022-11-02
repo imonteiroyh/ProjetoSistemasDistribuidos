@@ -2,12 +2,13 @@ from proto.lamp_pb2 import LampResponse
 from proto.lamp_pb2_grpc import LampServicer
 
 class LampActuator(LampServicer):
-    def __init__(self, change_motion_callback) -> None:
+    def __init__(self) -> None:
         self.state = True
         self.smart_lamp = True
-        self.callback = change_motion_callback
-        self.callback(self.motion)
         super().__init__()
+
+    def get_state(self, request, context):
+        return LampResponse(status=True, message=f'{self.state}')
 
     # def get_motion(self, request, context):
     #     return LampResponse(status=True, message = f'{self.motion}')

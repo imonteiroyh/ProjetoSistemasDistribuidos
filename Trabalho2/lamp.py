@@ -5,11 +5,11 @@ from config import HOST, LAMP_PORT
 from components.motion_sensor import MotionSensor
 from components.lamp_actuator import LampActuator
 
-motion_sensor = MotionSensor(HOST)
-motion_sensor.run()
-
 server = grpc.server(futures.ThreadPoolExecutor(max_workers = 10))
-lamp_actuator = LampActuator(motion_sensor.change_target)
+lamp_actuator = LampActuator()
+
+motion_sensor = MotionSensor(HOST, lamp_actuator.set_state_from_motion)
+motion_sensor.run()
 
 add_LampServicer_to_server(lamp_actuator, server)
 

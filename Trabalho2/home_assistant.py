@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from typing import Union
 
 from proto.air_conditioner_pb2 import GetAirConditionerTemperatureRequest, ChangeAirConditionerTemperatureRequest
+from proto.lamp_pb2 import GetLampStateRequest
 from utils import Actuators, Sensors
 
 
@@ -92,3 +93,10 @@ def air_conditioner_service(request: ApplicationRequest, response_config: Respon
         
         finally:
             return response
+
+
+@app.post('/lamp')
+def lamp(request: ApplicationRequest, response_config: Response):
+    actuator_request = GetLampStateRequest()
+    actuator_response = actuators.lamp_actuator.get_state(actuator_request)
+    return {'state': actuator_response.message}
