@@ -5,6 +5,7 @@ service AirConditioner {
     rpc get_temperature (GetAirConditionerTemperatureRequest) returns (AirConditionerResponse) {}
 }
 
+// TODO: mudar a temperature para inteiro ou float
 message ChangeAirConditionerTemperatureRequest {
     optional string temperature = 1;
 }
