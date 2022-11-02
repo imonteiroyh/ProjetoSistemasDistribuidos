@@ -1,7 +1,7 @@
 import grpc
 import threading
 import pika
-from config import HOST, AIR_CONDITIONER_PORT
+from config import HOST, AIR_CONDITIONER_PORT, TEMPERATURE_SENSOR_EXCHANGE, MOTION_SENSOR_EXCHANGE
 from proto.air_conditioner_pb2_grpc import AirConditionerStub
 from callbacks import temperature_sensor_callback, motion_sensor_callback
 
@@ -13,10 +13,10 @@ class Actuators:
 
 class Sensors:
     def __init__(self):
-        air_conditioner_thread = ThreadedConsumer('temperature_sensor', temperature_sensor_callback)
+        air_conditioner_thread = ThreadedConsumer(TEMPERATURE_SENSOR_EXCHANGE, temperature_sensor_callback)
         air_conditioner_thread.start()
 
-        lamp_thread = ThreadedConsumer('motion_sensor', motion_sensor_callback)
+        lamp_thread = ThreadedConsumer(MOTION_SENSOR_EXCHANGE, motion_sensor_callback)
         lamp_thread.start()
 
 

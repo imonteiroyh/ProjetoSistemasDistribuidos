@@ -2,11 +2,12 @@ import pika
 import threading
 from random import randint
 from time import sleep
+from config import MOTION_SENSOR_EXCHANGE
 
 class MotionSensor:
 
     def __init__(self, RABBITMQ_HOST):
-        self.exchange_name = 'motion_sensor'
+        self.exchange_name = MOTION_SENSOR_EXCHANGE
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(RABBITMQ_HOST))
         self.channel = self.connection.channel()
         self.channel.exchange_declare(exchange=self.exchange_name, exchange_type='fanout')
