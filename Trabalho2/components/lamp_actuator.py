@@ -10,11 +10,11 @@ class LampActuator(LampServicer):
     def get_state(self, request, context):
         return LampResponse(status=True, message=f'{self.state}')
 
-    def set_smart_lamp_state(self, request, context):
+    def change_smart_lamp_state(self, request, context):
         self.smart_lamp = bool(request.smart_lamp_state)
         return LampResponse(status=True, message=f'Smart Lamp State setted to {self.smart_lamp_state}')
 
-    def set_lamp_state(self, request, context):
+    def change_lamp_state(self, request, context):
         self.smart_lamp = False
         self.state = bool(request.lamp_state)
         return LampResponse(status=True, message=f'Lamp State setted to {self.state}')
@@ -27,7 +27,7 @@ class LampActuator(LampServicer):
     #     self.callback(self.smart_lamp)
     #     return LampResponse(status=True, message=f'Smart Lamp setted to {self.smart_lamp}')
 
-    def set_state_from_motion(self, motion):
+    def change_state_from_motion(self, motion):
         if self.smart_lamp == True:
             if motion == 0:
                 self.state = False

@@ -8,7 +8,7 @@ from components.lamp_actuator import LampActuator
 server = grpc.server(futures.ThreadPoolExecutor(max_workers = 10))
 lamp_actuator = LampActuator()
 
-motion_sensor = MotionSensor(HOST, lamp_actuator.set_state_from_motion)
+motion_sensor = MotionSensor(HOST, lamp_actuator.change_state_from_motion)
 motion_sensor.run()
 
 add_LampServicer_to_server(lamp_actuator, server)
