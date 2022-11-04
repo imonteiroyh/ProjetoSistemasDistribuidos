@@ -1,18 +1,23 @@
 syntax = "proto3";
 
 service Lamp {
-    rpc change_state (ChangeLampStateRequest) returns (LampResponse) {}
     rpc get_state (GetLampStateRequest) returns (LampResponse) {}
+    rpc get_color (GetLampColorRequest) returns (LampResponse) {}
+    rpc change_state (ChangeLampStateRequest) returns (LampResponse) {}
     rpc change_color (ChangeLampColorRequest) returns (LampResponse) {}
-    rpc change_smart_lamp_state (ChangeSmartLampStateRequest)
+    rpc change_smart_lamp_state (ChangeSmartLampStateRequest) returns (LampResponse) {}
 }
 
 message GetLampStateRequest {
 
 }
 
+message GetLampColorRequest {
+    
+}
+
 message ChangeLampColorRequest {
-    optional string hex_color = 1;
+    optional string color = 1;
 }
 
 message ChangeLampStateRequest {
