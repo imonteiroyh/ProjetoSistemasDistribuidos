@@ -8,7 +8,6 @@ from proto.air_conditioner_pb2 import GetAirConditionerTemperatureRequest, Chang
 from proto.lamp_pb2 import GetLampStateRequest
 from utils import Actuators, Sensors
 
-
 class ApplicationRequest(BaseModel):
     command: Union[str, None] = None
     arguments: Union[str, None] = None
@@ -110,7 +109,7 @@ def lamp(request: ApplicationRequest, response_config: Response):
         try:
             actuator_response = actuators.lamp_actuator.get_state(actuator_request)
             if actuator_response.status == True:
-                if actuator_response.message == True:
+                if actuator_response.message == "True":
                     current_state = 'on'
                 else:
                     current_state = 'off'

@@ -5,7 +5,6 @@ from config import HOST, AIR_CONDITIONER_PORT
 from components.temperature_sensor import TemperatureSensor
 from components.air_conditioner_actuator import AirConditionerActuator
 
-
 temperature_sensor = TemperatureSensor(HOST)
 temperature_sensor.run()
 

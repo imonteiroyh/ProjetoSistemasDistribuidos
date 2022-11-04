@@ -14,7 +14,6 @@ class Actuators:
         lamp_channel = grpc.insecure_channel(HOST + ':' + LAMP_PORT)
         self.lamp_actuator = LampStub(lamp_channel)
 
-
 class Sensors:
     def __init__(self):
         air_conditioner_thread = ThreadedConsumer(TEMPERATURE_SENSOR_EXCHANGE, temperature_sensor_callback)
@@ -22,7 +21,6 @@ class Sensors:
 
         lamp_thread = ThreadedConsumer(MOTION_SENSOR_EXCHANGE, motion_sensor_callback)
         lamp_thread.start()
-
 
 class ThreadedConsumer(threading.Thread):
     def __init__(self, exchange, callback):
