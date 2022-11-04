@@ -14,14 +14,19 @@ class LampStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.change_state = channel.unary_unary(
-                '/Lamp/change_state',
-                request_serializer=proto_dot_lamp__pb2.ChangeLampStateRequest.SerializeToString,
-                response_deserializer=proto_dot_lamp__pb2.LampResponse.FromString,
-                )
         self.get_state = channel.unary_unary(
                 '/Lamp/get_state',
                 request_serializer=proto_dot_lamp__pb2.GetLampStateRequest.SerializeToString,
+                response_deserializer=proto_dot_lamp__pb2.LampResponse.FromString,
+                )
+        self.get_color = channel.unary_unary(
+                '/Lamp/get_color',
+                request_serializer=proto_dot_lamp__pb2.GetLampColorRequest.SerializeToString,
+                response_deserializer=proto_dot_lamp__pb2.LampResponse.FromString,
+                )
+        self.change_state = channel.unary_unary(
+                '/Lamp/change_state',
+                request_serializer=proto_dot_lamp__pb2.ChangeLampStateRequest.SerializeToString,
                 response_deserializer=proto_dot_lamp__pb2.LampResponse.FromString,
                 )
         self.change_color = channel.unary_unary(
@@ -29,18 +34,29 @@ class LampStub(object):
                 request_serializer=proto_dot_lamp__pb2.ChangeLampColorRequest.SerializeToString,
                 response_deserializer=proto_dot_lamp__pb2.LampResponse.FromString,
                 )
+        self.change_smart_lamp_state = channel.unary_unary(
+                '/Lamp/change_smart_lamp_state',
+                request_serializer=proto_dot_lamp__pb2.ChangeSmartLampStateRequest.SerializeToString,
+                response_deserializer=proto_dot_lamp__pb2.LampResponse.FromString,
+                )
 
 
 class LampServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def change_state(self, request, context):
+    def get_state(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def get_state(self, request, context):
+    def get_color(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def change_state(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -52,22 +68,38 @@ class LampServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def change_smart_lamp_state(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_LampServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'change_state': grpc.unary_unary_rpc_method_handler(
-                    servicer.change_state,
-                    request_deserializer=proto_dot_lamp__pb2.ChangeLampStateRequest.FromString,
-                    response_serializer=proto_dot_lamp__pb2.LampResponse.SerializeToString,
-            ),
             'get_state': grpc.unary_unary_rpc_method_handler(
                     servicer.get_state,
                     request_deserializer=proto_dot_lamp__pb2.GetLampStateRequest.FromString,
                     response_serializer=proto_dot_lamp__pb2.LampResponse.SerializeToString,
             ),
+            'get_color': grpc.unary_unary_rpc_method_handler(
+                    servicer.get_color,
+                    request_deserializer=proto_dot_lamp__pb2.GetLampColorRequest.FromString,
+                    response_serializer=proto_dot_lamp__pb2.LampResponse.SerializeToString,
+            ),
+            'change_state': grpc.unary_unary_rpc_method_handler(
+                    servicer.change_state,
+                    request_deserializer=proto_dot_lamp__pb2.ChangeLampStateRequest.FromString,
+                    response_serializer=proto_dot_lamp__pb2.LampResponse.SerializeToString,
+            ),
             'change_color': grpc.unary_unary_rpc_method_handler(
                     servicer.change_color,
                     request_deserializer=proto_dot_lamp__pb2.ChangeLampColorRequest.FromString,
+                    response_serializer=proto_dot_lamp__pb2.LampResponse.SerializeToString,
+            ),
+            'change_smart_lamp_state': grpc.unary_unary_rpc_method_handler(
+                    servicer.change_smart_lamp_state,
+                    request_deserializer=proto_dot_lamp__pb2.ChangeSmartLampStateRequest.FromString,
                     response_serializer=proto_dot_lamp__pb2.LampResponse.SerializeToString,
             ),
     }
@@ -79,23 +111,6 @@ def add_LampServicer_to_server(servicer, server):
  # This class is part of an EXPERIMENTAL API.
 class Lamp(object):
     """Missing associated documentation comment in .proto file."""
-
-    @staticmethod
-    def change_state(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Lamp/change_state',
-            proto_dot_lamp__pb2.ChangeLampStateRequest.SerializeToString,
-            proto_dot_lamp__pb2.LampResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
     def get_state(request,
@@ -115,6 +130,40 @@ class Lamp(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
+    def get_color(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/Lamp/get_color',
+            proto_dot_lamp__pb2.GetLampColorRequest.SerializeToString,
+            proto_dot_lamp__pb2.LampResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def change_state(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/Lamp/change_state',
+            proto_dot_lamp__pb2.ChangeLampStateRequest.SerializeToString,
+            proto_dot_lamp__pb2.LampResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
     def change_color(request,
             target,
             options=(),
@@ -127,6 +176,23 @@ class Lamp(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Lamp/change_color',
             proto_dot_lamp__pb2.ChangeLampColorRequest.SerializeToString,
+            proto_dot_lamp__pb2.LampResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def change_smart_lamp_state(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/Lamp/change_smart_lamp_state',
+            proto_dot_lamp__pb2.ChangeSmartLampStateRequest.SerializeToString,
             proto_dot_lamp__pb2.LampResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
