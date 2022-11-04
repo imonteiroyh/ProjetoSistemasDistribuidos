@@ -22,9 +22,9 @@ app = FastAPI()
 def air_conditioner_service(request: ApplicationRequest, response_config: Response):
 
     if request.command is None:
-            response_config.status_code = status.HTTP_400_BAD_REQUEST
-            response = {'message': "'command' is a required field"}
-            return response
+        response_config.status_code = status.HTTP_400_BAD_REQUEST
+        response = {'message': "'command' is a required field"}
+        return response
 
     if request.command == 'get_temperature':
         actuator_request = GetAirConditionerTemperatureRequest()
@@ -53,11 +53,9 @@ def air_conditioner_service(request: ApplicationRequest, response_config: Respon
         except Exception as e:
             response_config.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
             response = {'message': 'Unexpected error'}
-        
+
         finally:
             return response
-
-        
 
     if request.command == 'change_temperature':
         if request.arguments is None:
@@ -76,7 +74,7 @@ def air_conditioner_service(request: ApplicationRequest, response_config: Respon
                     'message': 'A error has occurred when the device was processing the request',
                     'device message': str(actuator_response.message)
                     }
-        
+
         except grpc.RpcError as e:
             if e.code() == grpc.StatusCode.UNAVAILABLE:
                 response_config.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -90,13 +88,53 @@ def air_conditioner_service(request: ApplicationRequest, response_config: Respon
         except Exception as e:
             response_config.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
             response = {'message': 'Unexpected error'}
-        
+
         finally:
             return response
 
 
 @app.post('/lamp')
 def lamp(request: ApplicationRequest, response_config: Response):
-    actuator_request = GetLampStateRequest()
-    actuator_response = actuators.lamp_actuator.get_state(actuator_request)
-    return {'state': actuator_response.message}
+    # actuator_request = GetLampStateRequest()
+    # actuator_response = actuators.lamp_actuator.get_state(actuator_request)
+    # return {'state': actuator_response.message}
+
+    if request.command is None:
+        response_config.status_code = status.HTTP_400_BAD_REQUEST
+        response = {'message': "'command' is a required field"}
+        return response
+
+    #COMANDOS: VERIFICAR PRESENÇA, ATIVAR/DESATIVAR SMART_LAMP, LIGAR/DESLIGAR LÂMPADA
+    if request.command == 'get_lamp_state':
+        actuator_request = GetLampStateRequest()
+        try:
+            actuator_response = actuators.lamp_actuator.get_state(actuator_request)
+            if actuator_response.status == True:
+                if actuator_response.message == True:
+                    current_state = 'on'
+                else:
+                    current_state = 'off'
+                response = {'turned ': current_state}
+            else:
+                response_config.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+                response = {
+                    'message': 'A error has occurred when the device was processing the request',
+                    'device message': str(actuator_response.message)
+                    }
+
+        except grpc.RpcError as e:
+            if e.code() == grpc.StatusCode.UNAVAILABLE:
+                response_config.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+                response = {'message': 'Actuator unavailable'}
+
+            else:
+                print(e)
+                response_config.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+                response = {'message': 'Unexpected error while communicating with the actuator'}
+
+        except Exception as e:
+            response_config.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+            response = {'message': 'Unexpected error'}
+
+        finally:
+            return response
