@@ -17,39 +17,38 @@ colors = {'white': 'branco', 'red': 'vermelho', 'green': 'verde', 'blue':'azul',
  'yellow':'amarelo', 'orange':'laranja', 'cyan': 'ciano'}
 
 
-print('Inicializando sistema de casa inteligente...')
+print('Booting smart home system...')
 while True:
-    print('1 - Ar Condicionado')
-    print('2 - Lâmpada Inteligente')
-    print('3 - Umidificador Inteligente')
-    device = int(input('Com qual dispositivo deseja interagir? '))
+    print('1 - Air conditioning')
+    print('2 - Smart Lamp')
+    print('3 - Smart Humidifier')
+    device = int(input('Which device do you want to interact with? '))
 
     if device == 1:
-        print('1 - Recuperar o estado atual do ar-condicionado')
-        print('2 - Recuperar a temperatura atual do ar-condicionado')
-        print('3 - Mudar o estado atual do ar-condicionado')
-        print('4 - Mudar a temperatura do ar-condicionado')
-        print('5 - Monitorar temperatura do ambiente')
-        action = int(input('O que deseja fazer? '))
+        print('1 - Retrieve the current state of the air conditioning')
+        print('2 - Retrieve the current temperature of the air conditioning')
+        print('3 - Change the current state of theair conditioning')
+        print('4 - Change the current temperature of the air conditioning')
+        print('5 - Monitor ambient temperature')
+        action = int(input('What do you want to do? '))
 
 
         if action == 1:
             request = {'command': 'get_state'}
             raw_response = requests.post(air_conditioner_url, json=request)
             response = loads(raw_response.text)
-            print(f'O estado atual do ar-condicionado é {states[response["state"]]}')
-            # print(response)
+            print(f'The current state of the air conditioning is {response["state"]}')
 
         if action == 2:
             request = {'command': 'get_temperature'}
             raw_response = requests.post(air_conditioner_url, json=request)
             response = loads(raw_response.text)
-            print(f'A temperatura atual do ar-condicionado é {response["temperature"]} graus celsius')
+            print(f'The current temperature of the air conditioning is {response["temperature"]} ')
 
         if action == 3:
-            print('1 - Desligar')
-            print('2 - Ligar')
-            value = int(input('O que deseja fazer? '))
+            print('1 - Turn off')
+            print('2 - Turn on')
+            value = int(input('What do you want to do? '))
             if value == 2:
                 argument = 'True'
             else:
@@ -60,53 +59,53 @@ while True:
                 }
             raw_response = requests.post(air_conditioner_url, json=request)
             response = loads(raw_response.text)
-            print(response)
+            print(response['message'])
 
         if action == 4:
-            temperature = str(input('Para qual temperatura deseja mudar?'))
+            temperature = str(input('PWhat temperature do you want to change to?'))
             request = {
                 'command': 'change_temperature',
                 'arguments' : temperature
                 }
             raw_response = requests.post(air_conditioner_url, json=request)
             response = loads(raw_response.text)
-            print(response)
+            print(response['message'])
 
         if action == 5:
             while True:
                 request = {'command': 'get_sensor_read'}
                 raw_response = requests.post(air_conditioner_url, json=request)
                 response = loads(raw_response.text)
-                print(f'A temperatura atual da sala é {response["temperature"]} graus celsius')
+                print(f'The current temperature of the air conditioning is {response["temperature"]} ')
                 sleep(3)
                 if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
                     line = input()
                     break
 
     if device == 2:
-        print('1 - Recuperar o estado atual da lâmpada')
-        print('2 - Recuperar a cor atual da lâmpada')
-        print('3 - Alterar o estado atual da lâmpada')
-        print('4 - Alterar a cor atual da lâmpada')
-        print('5 - Alterar o estado atual do modo inteligente')
-        action = int(input('O que deseja fazer? '))
+        print('1 - Retrieve the current state of the lamp')
+        print('2 - Retrieve current lamp color')
+        print('3 - Change the current state of the lamp')
+        print('4 - Change current lamp color')
+        print('5 - Change the current smart mode state')
+        action = int(input('What do you want to do? '))
 
         if action == 1:
             request = {'command': 'get_state'}
             raw_response = requests.post(lamp_url, json=request)
             response = loads(raw_response.text)
-            print(f'O estado atual da lampada é {states[response["turned"]]}')
+            print(f'The current state of the lamp is {response["turned"]}')
         
         if action == 2:
             request = {'command': 'get_color'}
             raw_response = requests.post(lamp_url, json=request)
             response = loads(raw_response.text)
-            print(f'A cor atual da lâmpada é {colors[response["color"]]}')
+            print(f'The current lamp color is {response["color"]}')
         
         if action == 3:
-            print('1 - Desligar')
-            print('2 - Ligar')
-            index = int(input('O que deseja fazer? '))
+            print('1 - Turn off')
+            print('2 - Turn on')
+            index = int(input('What do you want to do? '))
             index = index - 1
             state = str(index)
             print(state)
@@ -116,13 +115,13 @@ while True:
                 }
             raw_response = requests.post(lamp_url, json=request)
             response = loads(raw_response.text)
-            print(response)
+            print(response['message'])
             
 
         if action == 4:
             for i in range(0,len(colors_list)):
                 print(f'{i+1} - {colors[colors_list[i]]}')
-            index = int(input('Para qual cor deseja mudar? '))
+            index = int(input('Which color do you want to change to? '))
             color = colors_list[index-1]
             request = {
                 'command': 'change_color',
@@ -130,11 +129,12 @@ while True:
                 }
             raw_response = requests.post(lamp_url, json=request)
             response = loads(raw_response.text)
+            print(response['message'])
         
         if action == 5:
-            print('1 - Desligar')
-            print('2 - Ligar')
-            index = int(input('O que deseja fazer? '))
+            print('1 - Turn off')
+            print('2 - Turn on')
+            index = int(input('What do you want to do? '))
             index = index - 1
             state = str(index)
             print(state)
@@ -144,35 +144,35 @@ while True:
                 }
             raw_response = requests.post(lamp_url, json=request)
             response = loads(raw_response.text)
-            print(response)
+            print(response['message'])
 
     if device == 3:
-        print('1 - Recuperar o estado atual da umidificador')
+        print('1 - Retrieve the current state of the humidifier')
         print('2 - Recuperar se o modo inteligente está ativado')
-        print('3 - Alterar o estado atual do umidificador')
-        print('4 - Alterar o estado atual do modo inteligente')
-        print('5 - Alterar limite inferior e limite superior de umidade')
-        print('6 - Monitorar a umidade do ambiente')
+        print('3 - Recover if smart mode is on')
+        print('4 - Change the current smart mode state')
+        print('5 - Change Lower Limit and Upper Humidity Limit')
+        print('6 - Monitor ambient humidity')
     
         
-        action = int(input('O que deseja fazer? '))
+        action = int(input('What do you want to do? '))
 
         if action == 1:
             request = {'command': 'get_state'}
             raw_response = requests.post(humidifier_url, json=request)
             response = loads(raw_response.text)
-            print(f'O estado atual do umidificador é {states[response["state"]]}')
+            print(f'The current status of the humidifier is {response["state"]}')
         
         if action == 2:
             request = {'command': 'get_smart_humidifier_state'}
             raw_response = requests.post(humidifier_url, json=request)
             response = loads(raw_response.text)
-            print(f'O inteligente está {states[response["state"]]}')
+            print(f'The smart is {response["state"]}')
 
         if action == 3:
-            print('1 - Desligar')
-            print('2 - Ligar')
-            value = int(input('O que deseja fazer? '))
+            print('1 - Turn off')
+            print('2 - Turn on')
+            value = int(input('What do you want to do? '))
             if value == 2:
                 argument = 'True'
             else:
@@ -183,12 +183,12 @@ while True:
                 }
             raw_response = requests.post(humidifier_url, json=request)
             response = loads(raw_response.text)
-            print(response)
+            print(response['message'])
         
         if action == 4:
-            print('1 - Desligar')
-            print('2 - Ligar')
-            value = int(input('O que deseja fazer? '))
+            print('1 - Turn off')
+            print('2 - Turn on')
+            value = int(input('What do you want to do? '))
             if value == 2:
                 argument = 'True'
             else:
@@ -199,25 +199,25 @@ while True:
                 }
             raw_response = requests.post(humidifier_url, json=request)
             response = loads(raw_response.text)
-            print(response)
+            print(response['message'])
 
         if action == 5:
-            inf = int(input('Limite inferior: '))
-            sup = int(input('Limite superior: '))
+            inf = int(input('Lower Bound: '))
+            sup = int(input('Upper Bound: '))
             request = {
                 'command': 'change_bounds',
                 'arguments': [inf, sup]
                 }
             raw_response = requests.post(humidifier_url, json=request)
             response = loads(raw_response.text)
-            print(response)
+            print(response['message'])
 
         if action == 6:
             while True:
                 request = {'command': 'get_sensor_read'}
                 raw_response = requests.post(humidifier_url, json=request)
                 response = loads(raw_response.text)
-                print(f'A umidade atual da sala é {response["humidity"]} ')
+                print(f'The current humidity in the room is {response["humidity"]} ')
                 sleep(3)
                 if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
                     line = input()
