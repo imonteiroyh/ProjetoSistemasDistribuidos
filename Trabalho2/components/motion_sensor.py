@@ -13,6 +13,7 @@ class MotionSensor:
         self.channel.exchange_declare(exchange=self.exchange_name, exchange_type='fanout')
         print('Motion sensor connected to RabbitMQ')
         self.callback = change_motion_callback
+        self.state = True
 
     def generate_data(self):
         print('Generating data...')
@@ -20,12 +21,16 @@ class MotionSensor:
             self.motion = randint(0, 1)
             self.callback(self.motion)
 
-            self.channel.basic_publish(
-                exchange=self.exchange_name,
-                routing_key='',
-                body=str(self.motion)
-            )
+            if self.state:
+                self.channel.basic_publish(
+                    exchange=self.exchange_name,
+                    routing_key='',
+                    body=str(self.motion)
+                )
             sleep(5)
+
+    def change_state(self, state):
+        self.state = state
 
     def run(self):
         motion_sensor_thread = threading.Thread(target=self.generate_data)

@@ -2,11 +2,13 @@ from proto.humidifier_pb2 import HumidifierResponse
 from proto.humidifier_pb2_grpc import HumidifierServicer
 
 class HumidifierActuator(HumidifierServicer):
-    def __init__(self, change_increase_calllback) -> None:
+    def __init__(self, change_increase_calllback, change_sensor_state_callback) -> None:
         self.state = True
         self.smart_mode = True
         self.callback = change_increase_calllback
         self.callback(self.state)
+
+        self.change_sensor_state_callback = change_sensor_state_callback
 
         self.upper = 55
         self.lower = 40
@@ -51,3 +53,7 @@ class HumidifierActuator(HumidifierServicer):
             elif humidity <= self.lower:
                 self.state = True
                 self.callback(True)
+    
+    def change_sensor_state(self, request, context):
+        self.change_sensor_state_callback(request.state)
+        return HumidifierResponse(status=True, message='Sensor is on' if request.state == True else 'Sensor is off')

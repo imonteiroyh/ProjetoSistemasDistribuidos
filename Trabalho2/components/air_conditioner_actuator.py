@@ -2,11 +2,12 @@ from proto.air_conditioner_pb2 import AirConditionerResponse
 from proto.air_conditioner_pb2_grpc import AirConditionerServicer
 
 class AirConditionerActuator(AirConditionerServicer):
-    def __init__(self, change_temperature_callback) -> None:
+    def __init__(self, change_temperature_callback, change_sensor_state_callback) -> None:
         self.state = True
         self.temperature = 20
         self.callback = change_temperature_callback
         self.callback(self.temperature)
+        self.change_sensor_state_callback = change_sensor_state_callback
         super().__init__()
 
     def get_temperature(self, request, context):
@@ -29,3 +30,7 @@ class AirConditionerActuator(AirConditionerServicer):
 
     def get_state(self, request, context):
         return AirConditionerResponse(status=True, message='on' if self.state == True else 'off')
+
+    def change_sensor_state(self, request, context):
+        self.change_sensor_state_callback(request.state)
+        return AirConditionerResponse(status=True, message='Sensor is on' if request.state == True else 'Sensor is off')

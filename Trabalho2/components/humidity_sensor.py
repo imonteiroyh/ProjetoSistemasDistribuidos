@@ -18,6 +18,8 @@ class HumiditySensor:
 
         self.callback = smart_mode_callback
 
+        self.state = True
+
     def generate_data(self):
         print('Generating data...')
         while True:
@@ -29,11 +31,12 @@ class HumiditySensor:
             if self.callback is not None:
                 self.callback(self.humidity)
 
-            self.channel.basic_publish(
-                exchange=self.exchange_name,
-                routing_key='',
-                body=str(self.humidity)
-            )
+            if self.state == True:
+                self.channel.basic_publish(
+                    exchange=self.exchange_name,
+                    routing_key='',
+                    body=str(self.humidity)
+                )
 
             sleep(1)
             print(f'Humidity: {self.humidity}')
@@ -44,6 +47,10 @@ class HumiditySensor:
     def set_callback(self, callback):
         self.callback = callback
 
+    def change_state(self, state):
+        self.state = state
+
     def run(self):
         humidity_sensor_thread = threading.Thread(target=self.generate_data)
         humidity_sensor_thread.start()
+    

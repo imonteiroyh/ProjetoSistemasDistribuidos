@@ -6,6 +6,7 @@ class LampActuator(LampServicer):
         self.state = True
         self.smart_lamp = True
         self.color = "white"
+        self.callback = None
         super().__init__()
 
     def get_state(self, request, context):
@@ -34,3 +35,10 @@ class LampActuator(LampServicer):
             else:
                 self.state = True
         return LampResponse(status=True, message=f'Lamp state setted to {self.state} from motion')
+
+    def change_sensor_state(self, request, context):
+        self.callback(request.state)
+        return LampResponse(status=True, message='Sensor is on' if request.state == True else 'Sensor is off')
+
+    def set_callback(self, change_state_sensor_callback):
+        self.callback = change_state_sensor_callback

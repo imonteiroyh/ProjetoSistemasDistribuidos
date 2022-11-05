@@ -34,6 +34,11 @@ class AirConditionerStub(object):
                 request_serializer=proto_dot_air__conditioner__pb2.AirConditionerEmptyRequest.SerializeToString,
                 response_deserializer=proto_dot_air__conditioner__pb2.AirConditionerResponse.FromString,
                 )
+        self.change_sensor_state = channel.unary_unary(
+                '/AirConditioner/change_sensor_state',
+                request_serializer=proto_dot_air__conditioner__pb2.ChangeTemperatureSensorState.SerializeToString,
+                response_deserializer=proto_dot_air__conditioner__pb2.AirConditionerResponse.FromString,
+                )
 
 
 class AirConditionerServicer(object):
@@ -63,6 +68,12 @@ class AirConditionerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def change_sensor_state(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_AirConditionerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -84,6 +95,11 @@ def add_AirConditionerServicer_to_server(servicer, server):
             'get_state': grpc.unary_unary_rpc_method_handler(
                     servicer.get_state,
                     request_deserializer=proto_dot_air__conditioner__pb2.AirConditionerEmptyRequest.FromString,
+                    response_serializer=proto_dot_air__conditioner__pb2.AirConditionerResponse.SerializeToString,
+            ),
+            'change_sensor_state': grpc.unary_unary_rpc_method_handler(
+                    servicer.change_sensor_state,
+                    request_deserializer=proto_dot_air__conditioner__pb2.ChangeTemperatureSensorState.FromString,
                     response_serializer=proto_dot_air__conditioner__pb2.AirConditionerResponse.SerializeToString,
             ),
     }
@@ -160,6 +176,23 @@ class AirConditioner(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/AirConditioner/get_state',
             proto_dot_air__conditioner__pb2.AirConditionerEmptyRequest.SerializeToString,
+            proto_dot_air__conditioner__pb2.AirConditionerResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def change_sensor_state(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/AirConditioner/change_sensor_state',
+            proto_dot_air__conditioner__pb2.ChangeTemperatureSensorState.SerializeToString,
             proto_dot_air__conditioner__pb2.AirConditionerResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

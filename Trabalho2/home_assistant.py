@@ -5,10 +5,11 @@ from pydantic import BaseModel
 from typing import Union
 
 from proto.air_conditioner_pb2 import AirConditionerEmptyRequest, \
-    ChangeAirConditionerTemperatureRequest, ChangeAirConditionerStateRequest
-from proto.lamp_pb2 import GetLampStateRequest, GetLampColorRequest, ChangeLampStateRequest, ChangeSmartLampStateRequest, ChangeLampColorRequest
+    ChangeAirConditionerTemperatureRequest, ChangeAirConditionerStateRequest, ChangeTemperatureSensorState
+from proto.lamp_pb2 import LampEmptyRequest, ChangeLampStateRequest, ChangeSmartLampStateRequest, \
+    ChangeLampColorRequest, ChangeMotionSensorStateRequest
 from proto.humidifier_pb2 import ChangeSmartHumidifierRequest, ChangeHumidifierStateRequest, \
-    EmptyRequest, ChangeBoundsHumidifierRequest, HumidifierResponse
+    HumidifierEmptyRequest, ChangeBoundsHumidifierRequest, ChangeHumiditySensorStateRequest
 from utils import Actuators, Sensors
 
 class ApplicationRequest(BaseModel):
@@ -52,6 +53,47 @@ def air_conditioner_service(request: ApplicationRequest, response_config: Respon
         response_config.status_code = status.HTTP_400_BAD_REQUEST
         response = {'message': "'command' is a required field"}
         return response
+
+    if request.command == 'change_sensor_state':
+        if request.arguments is None:
+            response_config.status_code = status.HTTP_400_BAD_REQUEST
+            response = {'message': "'arguments' is a required field for this command"}
+            return response
+
+        actuator_request = ChangeTemperatureSensorState(state=True if request.arguments == 'True' else False)
+
+        try:
+            actuator_response = actuators.air_conditioner_actuator.change_sensor_state(actuator_request)
+            if actuator_response.status == True:
+                response = {'state': actuator_response.message}
+                if actuator_response.message == 'True':
+                    temperature_value = 20
+                else:
+                    temperature_value = 'off'
+
+            else:
+                response_config.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+                response = {
+                    'message': 'A error has occurred when the device was processing the request',
+                    'device message': str(actuator_response.message)
+                    }
+
+        except grpc.RpcError as e:
+            if e.code() == grpc.StatusCode.UNAVAILABLE:
+                response_config.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+                response = {'message': 'Actuator unavailable'}
+
+            else:
+                print(e)
+                response_config.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+                response = {'message': 'Unexpected error while communicating with the actuator'}
+
+        except Exception as e:
+            response_config.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+            response = {'message': 'Unexpected error'}
+
+        finally:
+            return response
 
     if request.command == 'get_temperature':
         actuator_request = AirConditionerEmptyRequest()
@@ -184,7 +226,7 @@ def air_conditioner_service(request: ApplicationRequest, response_config: Respon
             return response
 
     if request.command == 'get_sensor_read':
-        response = {'temperature': int(temperature_value)}
+        response = {'temperature': temperature_value}
         return response
 
     else:
@@ -201,9 +243,50 @@ def lamp(request: ApplicationRequest, response_config: Response):
         response = {'message': "'command' is a required field"}
         return response
 
+    if request.command == 'change_sensor_state':
+        if request.arguments is None:
+            response_config.status_code = status.HTTP_400_BAD_REQUEST
+            response = {'message': "'arguments' is a required field for this command"}
+            return response
+
+        actuator_request = ChangeMotionSensorStateRequest(state=True if request.arguments == 'True' else False)
+
+        try:
+            actuator_response = actuators.lamp_actuator.change_sensor_state(actuator_request)
+            if actuator_response.status == True:
+                response = {'state': actuator_response.message}
+                if actuator_response.message == 'True':
+                    motion_value = 0
+                else:
+                    motion_value = 'off'
+
+            else:
+                response_config.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+                response = {
+                    'message': 'A error has occurred when the device was processing the request',
+                    'device message': str(actuator_response.message)
+                    }
+
+        except grpc.RpcError as e:
+            if e.code() == grpc.StatusCode.UNAVAILABLE:
+                response_config.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+                response = {'message': 'Actuator unavailable'}
+
+            else:
+                print(e)
+                response_config.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+                response = {'message': 'Unexpected error while communicating with the actuator'}
+
+        except Exception as e:
+            response_config.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+            response = {'message': 'Unexpected error'}
+
+        finally:
+            return response
+
     #COMANDOS: VERIFICAR ESTADO, ATIVAR/DESATIVAR SMART_LAMP, LIGAR/DESLIGAR LÂMPADA
     if request.command == 'get_state':
-        actuator_request = GetLampStateRequest()
+        actuator_request = LampEmptyRequest()
         try:
             actuator_response = actuators.lamp_actuator.get_state(actuator_request)
             if actuator_response.status == True:
@@ -237,7 +320,7 @@ def lamp(request: ApplicationRequest, response_config: Response):
             return response
 
     if request.command == 'get_color':
-        actuator_request = GetLampColorRequest()
+        actuator_request = LampEmptyRequest()
 
         try:
             actuator_response = actuators.lamp_actuator.get_color(actuator_request)
@@ -388,7 +471,7 @@ def lamp(request: ApplicationRequest, response_config: Response):
             return response
 
     if request.command == 'get_sensor_read':
-        response = {'motion': int(motion_value)}
+        response = {'motion': motion_value}
         return response
 
     else:
@@ -404,8 +487,49 @@ def humidifier(request: ApplicationRequest, response_config: Response):
         response = {'message': "'command' is a required field"}
         return response
 
+    if request.command == 'change_sensor_state':
+        if request.arguments is None:
+            response_config.status_code = status.HTTP_400_BAD_REQUEST
+            response = {'message': "'arguments' is a required field for this command"}
+            return response
+
+        actuator_request = ChangeHumiditySensorStateRequest(state=True if request.arguments == 'True' else False)
+
+        try:
+            actuator_response = actuators.humidifier_actuator.change_sensor_state(actuator_request)
+            if actuator_response.status == True:
+                response = {'state': actuator_response.message}
+                if actuator_response.message == 'True':
+                    humidity_value = 40
+                else:
+                    humidity_value = 'off'
+
+            else:
+                response_config.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+                response = {
+                    'message': 'A error has occurred when the device was processing the request',
+                    'device message': str(actuator_response.message)
+                    }
+
+        except grpc.RpcError as e:
+            if e.code() == grpc.StatusCode.UNAVAILABLE:
+                response_config.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+                response = {'message': 'Actuator unavailable'}
+
+            else:
+                print(e)
+                response_config.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+                response = {'message': 'Unexpected error while communicating with the actuator'}
+
+        except Exception as e:
+            response_config.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+            response = {'message': 'Unexpected error'}
+
+        finally:
+            return response
+
     if request.command == 'get_smart_humidifier_state':
-        actuator_request = EmptyRequest()
+        actuator_request = HumidifierEmptyRequest()
         try:
             actuator_response = actuators.humidifier_actuator.get_smart_humidifier_state(actuator_request)
             if actuator_response.status == True:
@@ -436,7 +560,7 @@ def humidifier(request: ApplicationRequest, response_config: Response):
 
 
     if request.command == 'get_state':
-        actuator_request = EmptyRequest()
+        actuator_request = HumidifierEmptyRequest()
         try:
             actuator_response = actuators.humidifier_actuator.get_state(actuator_request)
             if actuator_response.status == True:
@@ -575,7 +699,7 @@ def humidifier(request: ApplicationRequest, response_config: Response):
 
 
     if request.command == 'get_sensor_read':
-        response = {'humidity': int(humidity_value)}
+        response = {'humidity': humidity_value}
         return response
     
 

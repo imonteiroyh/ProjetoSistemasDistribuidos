@@ -9,7 +9,7 @@ temperature_sensor = TemperatureSensor(HOST)
 temperature_sensor.run()
 
 server = grpc.server(futures.ThreadPoolExecutor(max_workers = 10))
-air_conditioner_actuator = AirConditionerActuator(temperature_sensor.change_target)
+air_conditioner_actuator = AirConditionerActuator(temperature_sensor.change_target, temperature_sensor.change_state)
 
 add_AirConditionerServicer_to_server(air_conditioner_actuator, server)
 

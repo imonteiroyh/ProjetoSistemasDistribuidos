@@ -14,6 +14,7 @@ class TemperatureSensor:
         print('Temperature sensor connected to RabbitMQ')
         self.target = target
         self.temperature = target
+        self.state = True
 
     def generate_data(self):
         print('Generating data...')
@@ -23,15 +24,19 @@ class TemperatureSensor:
             elif self.temperature < self.target:
                 self.temperature += 1
 
-            self.channel.basic_publish(
-                exchange=self.exchange_name,
-                routing_key='',
-                body=str(self.temperature)
-            )
+            if self.state:
+                self.channel.basic_publish(
+                    exchange=self.exchange_name,
+                    routing_key='',
+                    body=str(self.temperature)
+                )
             sleep(5)
         
     def change_target(self, target):
         self.target = target
+
+    def change_state(self, state):
+        self.state = state
 
     def run(self):
         temperature_sensor_thread = threading.Thread(target=self.generate_data)

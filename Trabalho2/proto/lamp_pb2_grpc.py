@@ -16,12 +16,12 @@ class LampStub(object):
         """
         self.get_state = channel.unary_unary(
                 '/Lamp/get_state',
-                request_serializer=proto_dot_lamp__pb2.GetLampStateRequest.SerializeToString,
+                request_serializer=proto_dot_lamp__pb2.LampEmptyRequest.SerializeToString,
                 response_deserializer=proto_dot_lamp__pb2.LampResponse.FromString,
                 )
         self.get_color = channel.unary_unary(
                 '/Lamp/get_color',
-                request_serializer=proto_dot_lamp__pb2.GetLampColorRequest.SerializeToString,
+                request_serializer=proto_dot_lamp__pb2.LampEmptyRequest.SerializeToString,
                 response_deserializer=proto_dot_lamp__pb2.LampResponse.FromString,
                 )
         self.change_state = channel.unary_unary(
@@ -37,6 +37,11 @@ class LampStub(object):
         self.change_smart_lamp_state = channel.unary_unary(
                 '/Lamp/change_smart_lamp_state',
                 request_serializer=proto_dot_lamp__pb2.ChangeSmartLampStateRequest.SerializeToString,
+                response_deserializer=proto_dot_lamp__pb2.LampResponse.FromString,
+                )
+        self.change_sensor_state = channel.unary_unary(
+                '/Lamp/change_sensor_state',
+                request_serializer=proto_dot_lamp__pb2.ChangeMotionSensorStateRequest.SerializeToString,
                 response_deserializer=proto_dot_lamp__pb2.LampResponse.FromString,
                 )
 
@@ -74,17 +79,23 @@ class LampServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def change_sensor_state(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_LampServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'get_state': grpc.unary_unary_rpc_method_handler(
                     servicer.get_state,
-                    request_deserializer=proto_dot_lamp__pb2.GetLampStateRequest.FromString,
+                    request_deserializer=proto_dot_lamp__pb2.LampEmptyRequest.FromString,
                     response_serializer=proto_dot_lamp__pb2.LampResponse.SerializeToString,
             ),
             'get_color': grpc.unary_unary_rpc_method_handler(
                     servicer.get_color,
-                    request_deserializer=proto_dot_lamp__pb2.GetLampColorRequest.FromString,
+                    request_deserializer=proto_dot_lamp__pb2.LampEmptyRequest.FromString,
                     response_serializer=proto_dot_lamp__pb2.LampResponse.SerializeToString,
             ),
             'change_state': grpc.unary_unary_rpc_method_handler(
@@ -100,6 +111,11 @@ def add_LampServicer_to_server(servicer, server):
             'change_smart_lamp_state': grpc.unary_unary_rpc_method_handler(
                     servicer.change_smart_lamp_state,
                     request_deserializer=proto_dot_lamp__pb2.ChangeSmartLampStateRequest.FromString,
+                    response_serializer=proto_dot_lamp__pb2.LampResponse.SerializeToString,
+            ),
+            'change_sensor_state': grpc.unary_unary_rpc_method_handler(
+                    servicer.change_sensor_state,
+                    request_deserializer=proto_dot_lamp__pb2.ChangeMotionSensorStateRequest.FromString,
                     response_serializer=proto_dot_lamp__pb2.LampResponse.SerializeToString,
             ),
     }
@@ -124,7 +140,7 @@ class Lamp(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Lamp/get_state',
-            proto_dot_lamp__pb2.GetLampStateRequest.SerializeToString,
+            proto_dot_lamp__pb2.LampEmptyRequest.SerializeToString,
             proto_dot_lamp__pb2.LampResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -141,7 +157,7 @@ class Lamp(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Lamp/get_color',
-            proto_dot_lamp__pb2.GetLampColorRequest.SerializeToString,
+            proto_dot_lamp__pb2.LampEmptyRequest.SerializeToString,
             proto_dot_lamp__pb2.LampResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -193,6 +209,23 @@ class Lamp(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Lamp/change_smart_lamp_state',
             proto_dot_lamp__pb2.ChangeSmartLampStateRequest.SerializeToString,
+            proto_dot_lamp__pb2.LampResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def change_sensor_state(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/Lamp/change_sensor_state',
+            proto_dot_lamp__pb2.ChangeMotionSensorStateRequest.SerializeToString,
             proto_dot_lamp__pb2.LampResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

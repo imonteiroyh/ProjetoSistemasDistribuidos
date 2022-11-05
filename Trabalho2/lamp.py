@@ -11,6 +11,8 @@ lamp_actuator = LampActuator()
 motion_sensor = MotionSensor(HOST, lamp_actuator.change_state_from_motion)
 motion_sensor.run()
 
+lamp_actuator.set_callback(motion_sensor.change_state)
+
 add_LampServicer_to_server(lamp_actuator, server)
 
 server.add_insecure_port(HOST + ':' + LAMP_PORT)

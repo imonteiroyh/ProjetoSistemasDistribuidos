@@ -9,7 +9,7 @@ humidity_sensor = HumiditySensor(HOST)
 humidity_sensor.run()
 
 server = grpc.server(futures.ThreadPoolExecutor(max_workers = 10))
-humidifier_actuator = HumidifierActuator(humidity_sensor.change_increasing)
+humidifier_actuator = HumidifierActuator(humidity_sensor.change_increasing, humidity_sensor.change_state)
 
 humidity_sensor.set_callback(humidifier_actuator.update_state)
 
