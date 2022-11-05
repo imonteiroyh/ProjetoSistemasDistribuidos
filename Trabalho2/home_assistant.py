@@ -4,7 +4,7 @@ from fastapi import FastAPI, Response, status
 from pydantic import BaseModel
 from typing import Union
 
-from proto.air_conditioner_pb2 import EmptyRequest as AirConditionerEmptyRequest, \
+from proto.air_conditioner_pb2 import AirConditionerEmptyRequest, \
     ChangeAirConditionerTemperatureRequest, ChangeAirConditionerStateRequest
 from proto.lamp_pb2 import GetLampStateRequest, GetLampColorRequest, ChangeLampStateRequest, ChangeSmartLampStateRequest, ChangeLampColorRequest
 from proto.humidifier_pb2 import ChangeSmartHumidifierRequest, ChangeHumidifierStateRequest, \

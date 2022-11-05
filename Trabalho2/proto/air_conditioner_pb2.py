@@ -13,23 +13,21 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1bproto/air_conditioner.proto\"\x1f\n\x1dGetAirConditionerStateRequest\"%\n#GetAirConditionerTemperatureRequest\"R\n&ChangeAirConditionerTemperatureRequest\x12\x18\n\x0btemperature\x18\x01 \x01(\tH\x00\x88\x01\x01\x42\x0e\n\x0c_temperature\"@\n ChangeAirConditionerStateRequest\x12\x12\n\x05state\x18\x01 \x01(\x08H\x00\x88\x01\x01\x42\x08\n\x06_state\"Z\n\x16\x41irConditionerResponse\x12\x13\n\x06status\x18\x01 \x01(\x08H\x00\x88\x01\x01\x12\x14\n\x07message\x18\x02 \x01(\tH\x01\x88\x01\x01\x42\t\n\x07_statusB\n\n\x08_message2\xd4\x02\n\x0e\x41irConditioner\x12X\n\x12\x63hange_temperature\x12\'.ChangeAirConditionerTemperatureRequest\x1a\x17.AirConditionerResponse\"\x00\x12R\n\x0fget_temperature\x12$.GetAirConditionerTemperatureRequest\x1a\x17.AirConditionerResponse\"\x00\x12L\n\x0c\x63hange_state\x12!.ChangeAirConditionerStateRequest\x1a\x17.AirConditionerResponse\"\x00\x12\x46\n\tget_state\x12\x1e.GetAirConditionerStateRequest\x1a\x17.AirConditionerResponse\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1bproto/air_conditioner.proto\"\x1c\n\x1a\x41irConditionerEmptyRequest\"R\n&ChangeAirConditionerTemperatureRequest\x12\x18\n\x0btemperature\x18\x01 \x01(\tH\x00\x88\x01\x01\x42\x0e\n\x0c_temperature\"@\n ChangeAirConditionerStateRequest\x12\x12\n\x05state\x18\x01 \x01(\x08H\x00\x88\x01\x01\x42\x08\n\x06_state\"Z\n\x16\x41irConditionerResponse\x12\x13\n\x06status\x18\x01 \x01(\x08H\x00\x88\x01\x01\x12\x14\n\x07message\x18\x02 \x01(\tH\x01\x88\x01\x01\x42\t\n\x07_statusB\n\n\x08_message2\xc8\x02\n\x0e\x41irConditioner\x12X\n\x12\x63hange_temperature\x12\'.ChangeAirConditionerTemperatureRequest\x1a\x17.AirConditionerResponse\"\x00\x12I\n\x0fget_temperature\x12\x1b.AirConditionerEmptyRequest\x1a\x17.AirConditionerResponse\"\x00\x12L\n\x0c\x63hange_state\x12!.ChangeAirConditionerStateRequest\x1a\x17.AirConditionerResponse\"\x00\x12\x43\n\tget_state\x12\x1b.AirConditionerEmptyRequest\x1a\x17.AirConditionerResponse\"\x00\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'proto.air_conditioner_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _GETAIRCONDITIONERSTATEREQUEST._serialized_start=31
-  _GETAIRCONDITIONERSTATEREQUEST._serialized_end=62
-  _GETAIRCONDITIONERTEMPERATUREREQUEST._serialized_start=64
-  _GETAIRCONDITIONERTEMPERATUREREQUEST._serialized_end=101
-  _CHANGEAIRCONDITIONERTEMPERATUREREQUEST._serialized_start=103
-  _CHANGEAIRCONDITIONERTEMPERATUREREQUEST._serialized_end=185
-  _CHANGEAIRCONDITIONERSTATEREQUEST._serialized_start=187
-  _CHANGEAIRCONDITIONERSTATEREQUEST._serialized_end=251
-  _AIRCONDITIONERRESPONSE._serialized_start=253
-  _AIRCONDITIONERRESPONSE._serialized_end=343
-  _AIRCONDITIONER._serialized_start=346
-  _AIRCONDITIONER._serialized_end=686
+  _AIRCONDITIONEREMPTYREQUEST._serialized_start=31
+  _AIRCONDITIONEREMPTYREQUEST._serialized_end=59
+  _CHANGEAIRCONDITIONERTEMPERATUREREQUEST._serialized_start=61
+  _CHANGEAIRCONDITIONERTEMPERATUREREQUEST._serialized_end=143
+  _CHANGEAIRCONDITIONERSTATEREQUEST._serialized_start=145
+  _CHANGEAIRCONDITIONERSTATEREQUEST._serialized_end=209
+  _AIRCONDITIONERRESPONSE._serialized_start=211
+  _AIRCONDITIONERRESPONSE._serialized_end=301
+  _AIRCONDITIONER._serialized_start=304
+  _AIRCONDITIONER._serialized_end=632
 # @@protoc_insertion_point(module_scope)
