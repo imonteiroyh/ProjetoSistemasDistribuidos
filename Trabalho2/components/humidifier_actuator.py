@@ -32,7 +32,7 @@ class HumidifierActuator(HumidifierServicer):
         self.smart_mode = request.state
         return HumidifierResponse(
             status=True,
-            message='Humidifier state is setted to {}'.format('on' if request.state else 'off')
+            message='Smart Humidifier state is setted to {}'.format('on' if request.state else 'off')
         )
 
     def change_bounds(self, request, context):

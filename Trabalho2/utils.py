@@ -1,10 +1,11 @@
 import grpc
 import threading
 import pika
-from config import HOST, AIR_CONDITIONER_PORT, TEMPERATURE_SENSOR_EXCHANGE, MOTION_SENSOR_EXCHANGE, LAMP_PORT
+from config import HOST, AIR_CONDITIONER_PORT, TEMPERATURE_SENSOR_EXCHANGE, MOTION_SENSOR_EXCHANGE, \
+    LAMP_PORT, HUMIDITY_SENSOR_EXCHANGE, HUMIDIFIER_PORT
 from proto.air_conditioner_pb2_grpc import AirConditionerStub
 from proto.lamp_pb2_grpc import LampStub
-from callbacks import temperature_sensor_callback, motion_sensor_callback
+from proto.humidifier_pb2_grpc import HumidifierStub
 
 class Actuators:
     def __init__(self):
@@ -14,13 +15,24 @@ class Actuators:
         lamp_channel = grpc.insecure_channel(HOST + ':' + LAMP_PORT)
         self.lamp_actuator = LampStub(lamp_channel)
 
+        humidifier_channel = grpc.insecure_channel(HOST + ':' +  HUMIDIFIER_PORT)
+        self.humidifier_actuator = HumidifierStub(humidifier_channel)
+
 class Sensors:
-    def __init__(self):
+    def __init__(
+            self, 
+            temperature_sensor_callback,
+            motion_sensor_callback,
+            humidity_sensor_callback
+        ):
         air_conditioner_thread = ThreadedConsumer(TEMPERATURE_SENSOR_EXCHANGE, temperature_sensor_callback)
         air_conditioner_thread.start()
 
         lamp_thread = ThreadedConsumer(MOTION_SENSOR_EXCHANGE, motion_sensor_callback)
         lamp_thread.start()
+
+        humidifier_thread = ThreadedConsumer(HUMIDITY_SENSOR_EXCHANGE, humidity_sensor_callback)
+        humidifier_thread.start()
 
 class ThreadedConsumer(threading.Thread):
     def __init__(self, exchange, callback):
