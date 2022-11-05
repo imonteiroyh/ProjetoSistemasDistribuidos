@@ -29,6 +29,12 @@ class HumiditySensor:
             if self.callback is not None:
                 self.callback(self.humidity)
 
+            self.channel.basic_publish(
+                exchange=self.exchange_name,
+                routing_key='',
+                body=str(self.humidity)
+            )
+
             sleep(1)
             print(f'Humidity: {self.humidity}')
         
