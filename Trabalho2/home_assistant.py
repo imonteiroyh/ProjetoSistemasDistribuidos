@@ -211,7 +211,7 @@ def lamp(request: ApplicationRequest, response_config: Response):
                     current_state = 'on'
                 else:
                     current_state = 'off'
-                response = {'turned ': current_state}
+                response = {'turned': current_state}
             else:
                 response_config.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
                 response = {
