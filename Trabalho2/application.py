@@ -27,9 +27,10 @@ while True:
     if device == 1:
         print('1 - Retrieve the current state of the air conditioning')
         print('2 - Retrieve the current temperature of the air conditioning')
-        print('3 - Change the current state of theair conditioning')
+        print('3 - Change the current state of the air conditioning')
         print('4 - Change the current temperature of the air conditioning')
-        print('5 - Monitor ambient temperature')
+        print('5 - Change the current state of the temperature sensor')
+        print('6 - Monitor ambient temperature')
         action = int(input('What do you want to do? '))
 
 
@@ -50,9 +51,9 @@ while True:
             print('2 - Turn on')
             value = int(input('What do you want to do? '))
             if value == 2:
-                argument = 'True'
+                argument = True
             else:
-                argument = 'False'
+                argument = False
             request = {
                 'command': 'change_state',
                 'arguments': argument
@@ -72,11 +73,28 @@ while True:
             print(response['message'])
 
         if action == 5:
+            print('1 - Turn off')
+            print('2 - Turn on')
+            value = int(input('What do you want to do? '))
+            if value == 2:
+                argument = True
+            else:
+                argument = False
+            request = {
+                'command': 'change_sensor_state',
+                'arguments': argument
+                }
+            raw_response = requests.post(air_conditioner_url, json=request)
+            response = loads(raw_response.text)
+            print(response['state'])
+
+
+        if action == 6:
             while True:
                 request = {'command': 'get_sensor_read'}
                 raw_response = requests.post(air_conditioner_url, json=request)
                 response = loads(raw_response.text)
-                print(f'The current temperature of the air conditioning is {response["temperature"]} ')
+                print(f'The current temperature of the room is {response["temperature"]} ')
                 sleep(3)
                 if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
                     line = input()
@@ -190,9 +208,9 @@ while True:
             print('2 - Turn on')
             value = int(input('What do you want to do? '))
             if value == 2:
-                argument = 'True'
+                argument = True
             else:
-                argument = 'False'
+                argument = False
             request = {
                 'command': 'change_smart_humidifier_state',
                 'arguments': argument
