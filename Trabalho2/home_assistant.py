@@ -4,8 +4,8 @@ from fastapi import FastAPI, Response, status
 from pydantic import BaseModel
 from typing import Union
 
-from proto.air_conditioner_pb2 import GetAirConditionerTemperatureRequest, \
-    ChangeAirConditionerTemperatureRequest, ChangeAirConditionerStateRequest, GetAirConditionerStateRequest
+from proto.air_conditioner_pb2 import EmptyRequest as AirConditionerEmptyRequest, \
+    ChangeAirConditionerTemperatureRequest, ChangeAirConditionerStateRequest
 from proto.lamp_pb2 import GetLampStateRequest, GetLampColorRequest, ChangeLampStateRequest, ChangeSmartLampStateRequest, ChangeLampColorRequest
 from proto.humidifier_pb2 import ChangeSmartHumidifierRequest, ChangeHumidifierStateRequest, \
     EmptyRequest, ChangeBoundsHumidifierRequest, HumidifierResponse
@@ -54,7 +54,7 @@ def air_conditioner_service(request: ApplicationRequest, response_config: Respon
         return response
 
     if request.command == 'get_temperature':
-        actuator_request = GetAirConditionerTemperatureRequest()
+        actuator_request = AirConditionerEmptyRequest()
 
         try:
             actuator_response = actuators.air_conditioner_actuator.get_temperature(actuator_request)
@@ -155,7 +155,7 @@ def air_conditioner_service(request: ApplicationRequest, response_config: Respon
             return response
     
     if request.command == 'get_state':
-        actuator_request = GetAirConditionerStateRequest()
+        actuator_request = AirConditionerEmptyRequest()
         try:
             actuator_response = actuators.air_conditioner_actuator.get_state(actuator_request)
             if actuator_response.status == True:
