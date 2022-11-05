@@ -16,3 +16,16 @@ class AirConditionerActuator(AirConditionerServicer):
         self.temperature = int(request.temperature)
         self.callback(self.temperature)
         return AirConditionerResponse(status=True, message=f'Temperature setted to {self.temperature}')
+
+    def change_state(self, request, context):
+        self.state = request.state
+        if self.state == True:
+            self.callback(self.temperature)
+        else:
+            self.callback(25)
+
+        message_complement = 'on' if self.state == True else 'off'
+        return AirConditionerResponse(status=True, message=f'Air Conditioner is {message_complement}')
+
+    def get_state(self, request, context):
+        return AirConditionerResponse(status=True, message='on' if self.state == True else 'off')
