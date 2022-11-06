@@ -156,7 +156,7 @@ while True:
 
         if action == 5:
             for i in range(0,len(colors_list)):
-                print(f'{i+1} - {colors[colors_list[i]]}')
+                print(f'{i+1} - {colors_list[i]}')
             index = int(input('Which color do you want to change to? '))
             color = colors_list[index-1]
             request = {
@@ -194,7 +194,6 @@ while True:
                 else:
                     print('The motion detect movement')
 
-                print(response)
                 if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
                     line = input()
                     break
@@ -204,8 +203,8 @@ while True:
 
     if device == 3:
         print('1 - Retrieve the current state of the humidifier')
-        print('2 - Recuperar se o modo inteligente está ativado')
-        print('3 - Recover if smart mode is on')
+        print('2 - Recover if smart mode is on')
+        print('3 - Change the current humidifier state')
         print('4 - Change the current smart mode state')
         print('5 - Change Lower Limit and Upper Humidity Limit')
         print('6 - Monitor ambient humidity')
