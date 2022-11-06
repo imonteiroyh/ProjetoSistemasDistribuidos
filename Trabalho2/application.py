@@ -150,7 +150,7 @@ while True:
                 'command': 'change_sensor_state',
                 'arguments': argument
                 }
-            raw_response = requests.post(air_conditioner_url, json=request)
+            raw_response = requests.post(lamp_url, json=request)
             response = loads(raw_response.text)
             print(response['state'])
 
