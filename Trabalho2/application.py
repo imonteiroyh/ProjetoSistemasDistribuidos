@@ -104,8 +104,10 @@ while True:
         print('1 - Retrieve the current state of the lamp')
         print('2 - Retrieve current lamp color')
         print('3 - Change the current state of the lamp')
-        print('4 - Change current lamp color')
-        print('5 - Change the current smart mode state')
+        print('4 - Change the current state of the motion sensor')
+        print('5 - Change current lamp color')
+        print('6 - Change the current smart mode state')
+        print('7 - Monitor de motion sensor')
         action = int(input('What do you want to do? '))
 
         if action == 1:
@@ -137,6 +139,22 @@ while True:
             
 
         if action == 4:
+            print('1 - Turn off')
+            print('2 - Turn on')
+            value = int(input('What do you want to do? '))
+            if value == 2:
+                argument = True
+            else:
+                argument = False
+            request = {
+                'command': 'change_sensor_state',
+                'arguments': argument
+                }
+            raw_response = requests.post(air_conditioner_url, json=request)
+            response = loads(raw_response.text)
+            print(response['state'])
+
+        if action == 5:
             for i in range(0,len(colors_list)):
                 print(f'{i+1} - {colors[colors_list[i]]}')
             index = int(input('Which color do you want to change to? '))
@@ -149,7 +167,7 @@ while True:
             response = loads(raw_response.text)
             print(response['message'])
         
-        if action == 5:
+        if action == 6:
             print('1 - Turn off')
             print('2 - Turn on')
             index = int(input('What do you want to do? '))
@@ -163,6 +181,26 @@ while True:
             raw_response = requests.post(lamp_url, json=request)
             response = loads(raw_response.text)
             print(response['message'])
+        
+        if action == 7:
+            while True:
+                request = {'command': 'get_sensor_read'}
+                raw_response = requests.post(lamp_url, json=request)
+                response = loads(raw_response.text)
+                if response['motion'] == 0:
+                    print('The motion sensor did not detect movement')
+                elif response['motion'] == 'off':
+                    print('The motion sensor is off')
+                else:
+                    print('The motion detect movement')
+
+                print(response)
+                if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
+                    line = input()
+                    break
+                sleep(3)
+
+
 
     if device == 3:
         print('1 - Retrieve the current state of the humidifier')
